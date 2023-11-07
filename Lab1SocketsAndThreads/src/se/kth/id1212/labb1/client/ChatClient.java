@@ -1,8 +1,9 @@
 package se.kth.id1212.labb1.client;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class represents the client. It has two threads, one for
@@ -29,30 +30,90 @@ public class ChatClient {
     }
 }
 
+/**
+ * This class is responsible for reading incoming messages from the server and
+ * displaying them to the client.
+ */
 class ClientReader implements Runnable {
-
     private Socket socket;
+    private BufferedReader incoming;
 
     public ClientReader(Socket socket) {
         this.socket = socket;
+        try {
+            this.incoming = new BufferedReader(
+                    new InputStreamReader(this.socket.getInputStream(), StandardCharsets.UTF_8));
+        } catch (IOException ex) {
+            System.err.println("Error trying to get client input stream: " + ex);
+        }
     }
 
     @Override
     public void run() {
-
+        try {
+            while (!this.socket.isInputShutdown()) {
+                System.out.println(incoming.readLine());
+            }
+        } catch (IOException ex) { // not sure what this error would be because
+            System.err.println("From run method in ClientReader: " + ex);
+        } finally {
+            if (this.socket != null) {
+                try {
+                    this.socket.close();
+                } catch (IOException ex) {
+                    System.err.println("Could not close client socket: " + ex);
+                }
+            }
+        }
     }
 }
 
+/**
+ * This class is responsible for reading user input from the console
+ * and sending it to the server over the network
+ */
 class ClientWriter implements Runnable {
 
     private Socket socket;
+    private BufferedWriter outgoing; // used for sending the user input
+    private BufferedReader userInput; //for reading input from the user
 
     public ClientWriter(Socket socket) {
         this.socket = socket;
+        try {
+            this.outgoing = new BufferedWriter(
+                    new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8));
+            this.userInput = new BufferedReader(new InputStreamReader(System.in));
+        } catch (IOException ex) {
+            System.err.println("Error trying to get client output stream: " + ex);
+        }
     }
 
     @Override
     public void run() {
-
+        String message;
+        try {
+            while (!this.socket.isOutputShutdown()) {
+                message = this.userInput.readLine();
+                if (message.isEmpty()) {
+                    continue;
+                }
+                this.outgoing.write(message);
+                this.outgoing.flush();
+                if (message.equals("/quit") || message.equals("/exit")) {
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex);
+        } finally {
+            if (this.socket != null) {
+                try {
+                    this.socket.close();
+                } catch (IOException ex) {
+                    System.err.println("Could not close client socket: " + ex);
+                }
+            }
+        }
     }
 }
