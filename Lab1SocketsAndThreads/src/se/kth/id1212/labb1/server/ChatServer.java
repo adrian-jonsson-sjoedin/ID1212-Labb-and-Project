@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class ChatServer {
 
     private final static int PORT = 8418;
-    private static ArrayList<ClientHandler> clientList = new ArrayList<ClientHandler>(); // Holds all active client threads
+    private static int userId = 1;
+    private static ArrayList<ClientHandler> clientList = new ArrayList<>(); // Holds all active client threads
 
     public static void main(String[] args) {
         try (ServerSocket server = new ServerSocket(PORT)) {
@@ -23,11 +24,12 @@ public class ChatServer {
                     System.out.println("Listening for incoming connection requests...");
                     Socket connection = server.accept();
                     System.out.println("Accepted connection from " + connection.getInetAddress());
-                    ClientHandler clientHandler = new ClientHandler(connection);
+                    System.out.println("Creating client handler for the client");
+                    ClientHandler clientHandler = new ClientHandler(connection, userId);
+                    userId++;
                     clientList.add(clientHandler);
                     clientHandler.updateClientList(clientList);
-                    Thread client = new Thread(clientHandler);
-                    client.start();
+                    clientHandler.start();
                 } catch (IOException exception) {
                     System.err.println("Error accepting connection: " + exception);
                 }

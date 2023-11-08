@@ -17,6 +17,8 @@ public class ChatClient {
     public static void main(String[] args) {
         try (Socket socket = new Socket(HOST, PORT)) {
             socket.setSoTimeout(15000);
+            System.out.println("Write a message then hit enter to send. Type /quit or /exit to exit the application.");
+
             Thread clientReaderThread = new Thread(new ClientReader(socket));
             Thread clientWriterThread = new Thread(new ClientWriter(socket));
             clientReaderThread.start();
@@ -51,8 +53,8 @@ class ClientReader implements Runnable {
     @Override
     public void run() {
         try {
-            while (!this.socket.isInputShutdown()) {
-                System.out.println(incoming.readLine());
+            while (!this.socket.isClosed() && this.socket != null) {
+                System.out.println(this.incoming.readLine());
             }
         } catch (IOException ex) { // not sure what this error would be because
             System.err.println("From run method in ClientReader: " + ex);
