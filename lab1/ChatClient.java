@@ -24,17 +24,11 @@ public class ChatClient {
             clientReaderThread.start();
             clientWriterThread.start();
 
-            clientReaderThread.join();
-            clientWriterThread.join();
-
         } catch (UnknownHostException ex) {
             System.err.println("Could not connect to server: " + ex);
         } catch (IOException ex) {
             System.err.println("I/O error: " + ex);
-        } catch (InterruptedException exception) {
-            System.err.println("From constructor: " + exception);
         }
-
     }
 
     public static void main(String[] args) {
@@ -118,7 +112,16 @@ class ClientReader implements Runnable {
 //                closeConnection(socket, incoming, null);
             }
         }
-        System.out.println("After the client reader loop");
+//        } finally {
+//            if (this.socket != null) {
+//                try {
+//                    this.socket.close();
+//                } catch (IOException ex) {
+//                    System.err.println("Could not close client socket: " + ex);
+//                }
+//            }
+//            closeConnection(this.socket, this.incoming, null);
+//        }
     }
 }
 
@@ -161,7 +164,6 @@ class ClientWriter implements Runnable {
                     break;
                 }
             }
-            System.out.println("After the client writer loop");
         } catch (IOException ex) {
             System.err.println(ex);
         } finally {

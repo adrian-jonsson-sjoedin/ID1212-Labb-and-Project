@@ -31,15 +31,14 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void broadcast(String message) {
+    public void broadcast(String message) {
         if (isCloseConnectionRequestSent(message)) {
             closeConnection(this);
         }
         synchronized (clientList) {
             for (ClientHandler client : clientList) {
                 try {
-                    if (!client.user.equalsIgnoreCase(this.user)) {
-
+                    if (client.user != this.user) {
                         client.outgoing.write(message);
                         client.outgoing.flush();
                     }
