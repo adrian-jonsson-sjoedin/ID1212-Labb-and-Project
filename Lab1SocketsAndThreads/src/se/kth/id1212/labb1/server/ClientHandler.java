@@ -2,6 +2,7 @@ package se.kth.id1212.labb1.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -35,13 +36,16 @@ public class ClientHandler extends Thread {
 
 
     public synchronized void broadcast(String message) {
+        if (isCloseConnectionRequestSent(message)) {
+            closeConnection(this);
+        }
         for (ClientHandler client : clients) {
             try {
                 System.out.println("Inside broadcast method");
-//                if (!client.userId.equals(this.userId)) {
-              client.outgoing.println(message);
-                client.outgoing.flush();
-//                }
+                if (!client.userId.equals(this.userId)) {
+                    client.outgoing.println(this.userId + ": " + message);
+                    client.outgoing.flush();
+                }
             } catch (Exception exception) {
                 System.err.println("Error in ClientHandler broadcast: " + exception);
             }
@@ -63,7 +67,7 @@ public class ClientHandler extends Thread {
         try {
             closeReader(client.incoming);
             closeWriter(client.outgoing);
-            closeSocket(client.connection);
+            closeSocket(client.socket);
             removeClient(client);
         } catch (IOException exception) {
             System.err.println("Error trying to close in Client handler: " + exception);
@@ -83,15 +87,15 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void closeWriter(BufferedWriter outgoing) throws IOException {
+    private void closeWriter(PrintWriter outgoing) throws IOException {
         if (outgoing != null) {
             outgoing.close();
         }
     }
 
     private void removeClient(ClientHandler client) {
-        broadcast(client.user + " disconnected.");
-        clientList.remove(client);
+        broadcast(client.userId + " disconnected.");
+        clients.remove(client);
     }
 
     @Override
