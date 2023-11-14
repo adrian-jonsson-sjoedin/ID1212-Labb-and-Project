@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * This class handles the clients connecting to the server. It listens
@@ -13,81 +12,51 @@ import java.util.ListIterator;
  */
 public class ClientHandler extends Thread {
 
-    private final Socket connection;
+    private final Socket socket;
     private final String userId;
-    private static ArrayList<ClientHandler> clientList;
+    private static ArrayList<ClientHandler> clients = new ArrayList<>();
     private BufferedReader incoming;
     private BufferedWriter outgoing;
 
-    public ClientHandler(Socket connection, int userId) throws IOException {
-        this.connection = connection;
+    public ClientHandler(Socket socket, int userId) throws IOException {
+        this.socket = socket;
         this.userId = "User " + userId;
+        //add the new client to the list of clients
+        clients.add(this);
+        //create read stream
         this.incoming = new BufferedReader(
-                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        // create write stream
         this.outgoing = new BufferedWriter(
-                new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
+                new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+        System.out.println("Number of users in chat: " + clients.size());
+        //broadcast to everyone whenever a new user joins
+        broadcast(this.userId + " has joined the chat!");
     }
 
-    public void updateClientList(ArrayList<ClientHandler> clientList) {
-        ClientHandler.clientList = clientList;
-    }
 
-    public void broadcast(String message) {
-        synchronized (clientList) {
-            ListIterator<ClientHandler> iterator = clientList.listIterator();
-            ClientHandler current;
-            while (iterator.hasNext()) {
-                try {
-                    current = iterator.next();
-                    current.outgoing.write(message);
-                    current.outgoing.flush();
-                } catch (IOException ex) {
-                    System.err.println("There was an error with sending the message: " + ex);
+    public synchronized void broadcast(String message) {
+        for (ClientHandler client : clients) {
+            try {
+                if (!client.userId.equals(this.userId)) {
+                    client.outgoing.write(message);
+                    client.outgoing.flush();
                 }
+            } catch (IOException exception) {
+                System.err.println("Error in ClientHandler broadcast: " + exception);
             }
-//            for (ClientHandler clientHandler : clientList) {
-//                try {
-//                    if (clientHandler.connection != this.connection) {
-//                        BufferedWriter out = new BufferedWriter(
-//                                new OutputStreamWriter(
-//                                        clientHandler.connection.getOutputStream(),
-//                                        StandardCharsets.UTF_8));
-//                        out.write(message);
-//                        out.flush();
-//                    }
-//                } catch (IOException ex) {
-//                }
-//            }
         }
     }
 
     @Override
     public void run() {
-        try {
-            String welcome = "Welcome to the chat " + this.userId + "!";
-            this.outgoing.write(welcome);
-            this.outgoing.flush();
-            String message;
-            while (!this.connection.isClosed()) {
-                message = this.incoming.readLine();
-                if (message.equals("/quit") || message.equals("/exit")) {
-                    break;
-                } else {
-                    broadcast(this.userId + ": " + message);
-                }
-            }
-        } catch (IOException ex) {
-            System.err.println("ClientHandler error: " + ex);
-            ex.printStackTrace();
-        } finally {
-            clientList.remove(this);
-            System.out.println(this.userId + " has left the chat.");
-            if (this.connection != null) {
-                try {
-                    this.connection.close();
-                } catch (IOException ex) {
-                    System.err.println("Could not close client socket: " + ex);
-                }
+        String message;
+        while (!socket.isClosed()) {
+            try {
+                message = incoming.readLine();
+                broadcast(message);
+            } catch (IOException exception) {
+                System.err.println("ClientHandler run method: " + exception);
             }
         }
     }
