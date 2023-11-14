@@ -16,7 +16,7 @@ public class ClientHandler extends Thread {
     private final String userId;
     private static ArrayList<ClientHandler> clients = new ArrayList<>();
     private BufferedReader incoming;
-    private BufferedWriter outgoing;
+    private PrintWriter outgoing;
 
     public ClientHandler(Socket socket, int userId) throws IOException {
         this.socket = socket;
@@ -27,7 +27,7 @@ public class ClientHandler extends Thread {
         this.incoming = new BufferedReader(
                 new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         // create write stream
-        this.outgoing = new BufferedWriter(
+        this.outgoing = new PrintWriter(
                 new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         System.out.println("Number of users in chat: " + clients.size());
         //broadcast to everyone whenever a new user joins
@@ -38,13 +38,17 @@ public class ClientHandler extends Thread {
     public synchronized void broadcast(String message) {
         for (ClientHandler client : clients) {
             try {
-                if (!client.userId.equals(this.userId)) {
-                    client.outgoing.write(message);
-                    client.outgoing.flush();
-                }
-            } catch (IOException exception) {
+                System.out.println("Inside broadcast method");
+//                if (!client.userId.equals(this.userId)) {
+              client.outgoing.println(message);
+                client.outgoing.flush();
+//                }
+            } catch (Exception exception) {
                 System.err.println("Error in ClientHandler broadcast: " + exception);
             }
+//            catch (IOException exception) {
+//                System.err.println("Error in ClientHandler broadcast: " + exception);
+//            }
         }
     }
 

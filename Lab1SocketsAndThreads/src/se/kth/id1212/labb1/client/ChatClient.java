@@ -15,7 +15,7 @@ public class ChatClient {
     private static final String HOST = "localhost";
     private Socket socket;
     private BufferedReader incoming;
-    private BufferedWriter outgoing;
+    private PrintWriter outgoing;
     private boolean quitChat = false;
 
     public ChatClient() {
@@ -25,7 +25,7 @@ public class ChatClient {
             this.incoming = new BufferedReader(
                     new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             // create write stream
-            this.outgoing = new BufferedWriter(
+            this.outgoing = new PrintWriter(
                     new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         } catch (IOException exception) {
             System.err.println("Client constructor error: " + exception);
@@ -38,7 +38,8 @@ public class ChatClient {
             String message;
             while (!quitChat && !socket.isClosed()) {
                 message = scanner.nextLine();
-                outgoing.write(message);
+//                outgoing.write(message);
+                outgoing.println(message);
                 outgoing.flush();
                 if (message.startsWith("/quit")) {
                     System.out.println("Disconnecting from chat...");
@@ -46,7 +47,7 @@ public class ChatClient {
                     break;
                 }
             }
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             System.err.println("Client sendMessage error: " + exception);
         }
     }
