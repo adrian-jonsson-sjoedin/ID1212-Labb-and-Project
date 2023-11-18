@@ -8,5 +8,5 @@ package se.kth.id1212.lab2.contoller;
  * It manages incoming HTTP requests from the client browser, validates the
  * requests, checks for cookies and fetch relevant data from the model.
  */
-public class HTTPRequestHandler {
+public class RequestHandler {
 }

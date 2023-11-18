@@ -2,7 +2,9 @@ package se.kth.id1212.lab2.startup;
 
 import se.kth.id1212.lab2.model.Model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -25,8 +27,15 @@ public class HTTPServer {
             while (true) {
                 System.out.println("[HTTPServer] Listening for incoming connection requests...");
                 Socket connection = server.accept();
-                System.out.println("[HTTPServer] Accepted connection from " + connection.getInetAddress());
-                System.out.println("[HTTPServer] Creating request handler for the client");
+                // To see what the browser is sending to the server
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println("Client says: " + line);
+                }
+                //-------------------------------------------------
+//                System.out.println("[HTTPServer] Accepted connection from " + connection.getInetAddress());
+//                System.out.println("[HTTPServer] Creating request handler for the client");
                 // Create the request handler object and start the thread
 
             }
