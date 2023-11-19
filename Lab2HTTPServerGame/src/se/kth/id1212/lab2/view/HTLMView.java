@@ -1,7 +1,8 @@
 package se.kth.id1212.lab2.view;
 
 /**
- * Predefined HTLM strings that will be used to construct the browser view
+ * Predefined HTLM strings that will be used to construct the browser view by sending them with
+ * String.form()
  */
 public final class HTLMView {
 

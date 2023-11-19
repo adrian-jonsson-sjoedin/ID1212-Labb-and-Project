@@ -9,7 +9,7 @@ public class GameSession {
     private final String cookie; //to keep track of the sessions
     private int numbOfGuesses;
     private int randomNumber;
-    private Random random;
+    private final Random random;
 
     /**
      * Initialize the game session object
