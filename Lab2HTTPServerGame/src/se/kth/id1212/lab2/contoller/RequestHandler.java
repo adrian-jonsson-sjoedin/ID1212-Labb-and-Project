@@ -32,8 +32,10 @@ public class RequestHandler implements Runnable {
      * @param socket The socket to which the client is connected to
      */
     public RequestHandler(Model model, Socket socket) {
+        // Give the thread the application's model and save the clients socket
         this.model = model;
         this.socket = socket;
+        // Create the read and write stream to between the client and server
         try {
             //create read stream
             this.incoming = new BufferedReader(
@@ -46,15 +48,48 @@ public class RequestHandler implements Runnable {
                     exception.getMessage());
             closeConnection(this);
         }
+        /* Initialize the class responsible for sending response and view back to client. Needs the stream to write to
+           client*/
         this.view = new HTTPResponse(this.outgoing);
     }
 
+    @Override
+    public void run() {
+        try {
+            System.out.println("[RequestHandler run()]");
+            HTTPRequest request = new HTTPRequest(this.incoming);
+            int requestStatusCode = request.validateHTTPRequest();
+            String requestMethod = request.getMethod();
+            System.out.println("[RequestHandler run()] " + requestStatusCode); //debugging
+            System.out.println("[RequestHandler run()] " + requestMethod); // debugging
+            // we only want to do something if status is 200 OK
+            if (requestStatusCode != 200) {
 
+                handleErrorCodes(requestStatusCode);
+                closeConnection(this);
+                return;
+            }
+            System.out.println("[RequestHandler run()] calling handleGetRequest()"); //debugging
+            if (requestMethod.equals("GET")) {
+                handleGetRequest(request);
+            }
+        } catch (Exception exception) {
+            System.err.println(exception);
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * This method handles a clients HTTP request when the method is GET.
+     * Sets cookie if needed and add new game session if none exists.
+     * @param request The clients HTTP request
+     */
     private void handleGetRequest(HTTPRequest request) {
         System.out.println("[RequestHandler] In handleGetRequest()");
         String cookie = request.getCookie();
         GameSession currentGameSession = this.model.getGameSession(cookie);
 
+        System.out.println("Cookie from GETMethod: " +cookie);
         // No cookie means new client connected. Generate cookie, add new game session to model
         if (cookie.equals("")) {
             System.out.println("[RequestHandler] No cookie found, generating new cookie and session");
@@ -90,6 +125,12 @@ public class RequestHandler implements Runnable {
 
     }
 
+    /**
+     * Method that decides upon which view to send to the browser depending on the results from the user's guess
+     * @param result  The result String. Must be 'HIGHER', 'LOWER' or 'CORRECT'
+     * @param session The current game session
+     * @param cookie  The cookie for the current game session
+     */
     private void sendResult(String result, GameSession session, String cookie) {
         switch (result) {
             case "HIGHER" -> sendView(session.getNumbOfGuesses(), BODY_TOO_LOW);
@@ -109,6 +150,7 @@ public class RequestHandler implements Runnable {
      */
     private String extractUserGuess(String uri) {
         // URI will be on the form /?guess=1
+        System.out.println("[extractUserGuess()] " + uri);
         String userGuess;
         String[] guessURI = uri.split("=");
         try {
@@ -126,32 +168,11 @@ public class RequestHandler implements Runnable {
         return userGuess;
     }
 
-    @Override
-    public void run() {
-        try {
-            System.out.println("[RequestHandler run()]");
-            HTTPRequest request = new HTTPRequest(this.incoming);
-            int requestStatusCode = request.validateHTTPRequest();
-            String requestMethod = request.getMethod();
-            System.out.println("[RequestHandler run()] " + requestStatusCode); //debugging
-            System.out.println("[RequestHandler run()] " + requestMethod); // debugging
-            // we only want to do something if status is 200 OK
-            if (requestStatusCode != 200) {
-
-                handleErrorCodes(requestStatusCode);
-                closeConnection(this);
-                return;
-            }
-            System.out.println("[RequestHandler run()] calling handleGetRequest()"); //debugging
-            if (requestMethod.equals("GET")) {
-                handleGetRequest(request);
-            }
-        } catch (Exception exception) {
-            System.err.println(exception);
-            exception.printStackTrace();
-        }
-    }
-
+    /**
+     * Method that sends a view to the client that is displayed in the browser
+     * @param numbOfGuesses The total amount of guesses a user has done.
+     * @param template A string containing HTLM code where numbOfGuesses will be used
+     */
     private void sendView(int numbOfGuesses, String template) {
         String body = String.format(template, numbOfGuesses);
         this.view.sendServerResponse(200, "", String.format(HTLMView.HTML_TEMPLATE, body));
@@ -170,7 +191,7 @@ public class RequestHandler implements Runnable {
         String uniqueIdentifier = uuid.toString().replaceAll("-", "");
         return uniqueIdentifier;
     }
-
+    //Not sure if I need this one. Think the method in HTTPRequest should be enough
     private void handleErrorCodes(int HTTPStatusCode) {
 
     }

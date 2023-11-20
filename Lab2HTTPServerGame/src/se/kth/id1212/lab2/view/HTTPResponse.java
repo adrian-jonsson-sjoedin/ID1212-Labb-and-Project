@@ -47,8 +47,8 @@ public class HTTPResponse {
         headers.append("Content-length: ").append(length).append(newLine);
         headers.append("Content-Type: text/html; charset=utf-8").append(newLine);
         if (!cookie.equals("")) {
-            headers.append("Set-Cookie: clientID=").append(cookie);
-            headers.append("; SameSite=None").append(newLine);
+            headers.append("Set-Cookie: clientID=").append(cookie).append(newLine);
+//            headers.append("; SameSite=None").append(newLine);
         }
         headers.append(newLine);
         System.out.println("[getResponseHeaders()] "+headers.toString());

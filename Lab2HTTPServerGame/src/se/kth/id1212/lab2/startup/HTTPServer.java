@@ -18,7 +18,7 @@ public class HTTPServer {
     public static void main(String[] args) {
         try (ServerSocket server = new ServerSocket(PORT)) {
             System.out.println("[HTTPServer] Server has been started and is running on port " + server.getLocalPort());
-            Model model = new Model();
+            Model model = new Model(); // Initialize the model
             /**
              * The main thread listens for new connections and creates a new thread with a new game
              * session for each new individual client

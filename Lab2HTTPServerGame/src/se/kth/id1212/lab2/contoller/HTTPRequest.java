@@ -33,7 +33,7 @@ public class HTTPRequest {
     /**
      * Gets the HTTPS request cookie.
      *
-     * @return Will return the cookie, or "" if it's not the cookie that the server have set.
+     * @return Will return the cookie, or "" if it's not the cookie that our server have set.
      */
     public String getCookie() {
         System.out.println("[HTTPRequest getCookie()]");
