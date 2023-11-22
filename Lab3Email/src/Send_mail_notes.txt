@@ -1,0 +1,30 @@
+1. Connect to the mail server
+2. Send the EHLO command to the server
+3. Start the STARTTLS protocol
+4. Need to upgrade the socket to a secure socket and send the EHLO command again
+5. Login using the AUTH LOGIN command. Need to send username and password using Base 64 encoding
+
+We're now connected and can start sending an email
+6. Use the MAIL FROM command to specify who the mail is from
+7. Use the RCPT TO command to specify who to send the email to
+8. Use the DATA command to start the transfer of the message contents, i.e., the headers and then the
+message. After that the DATA command has been sent to the server from the client, the server will
+respond with a 354 reply code. After that, the message contents can be transferred to the server.
+When all message contents have been sent, a single dot (“.”) must be sent in a line by itself.
+If the message is accepted for delivery, the SMTP server will response with a 250 reply code.
+
+S: 354 Send message content; end with <CRLF>.<CRLF>
+C: Date: Thu, 21 May 2008 05:33:29 -0700
+C: From: SamLogic <mail@samlogic.com>
+C: Subject: The Next Meeting
+C: To: john@mail.com
+C:
+C: Hi John,
+C: The next meeting will be on Friday.
+C: /Anna.
+C: .
+S: 250 OK
+
+9. Finally, use the QUIT command to ask the server to close the connection.
+
+
