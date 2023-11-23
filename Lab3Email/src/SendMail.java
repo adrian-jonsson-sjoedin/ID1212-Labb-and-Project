@@ -2,7 +2,8 @@
  skicka ett mail till dig själv med hjälp av SMTP-protokollet.
  Webbmejlen har följande konfiguration (hämtat från KTH-intranät)
  I detta fall (SMTP med STARTTLS) går du över till kryptering under sessionen.
-
+För att skicka användarnamn och lösenord i SMTP behöver du använda Base64-encoding
+ och då kan https://docs.oracle.com/javase/8/docs/api/java/util/Base64.html vara användbart.
 
 Inställningar för att skicka e-post (utgående)
 Server: smtp.kth.se
@@ -32,7 +33,27 @@ public class SendMail {
     private static String message;
     private static BufferedReader incoming;
     private static PrintWriter outgoing;
-
+    /*
+    telnet smtp.kth.se 587
+    Trying 2001:6b0:1:1300:250:56ff:fead:4565...
+    Connected to smtp.kth.se.
+    Escape character is '^]'.
+    220 smtp-5.sys.kth.se ESMTP Postfix
+    EHLO smtp.kth.se
+    250-smtp-5.sys.kth.se
+    250-PIPELINING
+    250-SIZE 41943040
+    250-STARTTLS
+    250-ENHANCEDSTATUSCODES
+    250-8BITMIME
+    250-DSN
+    250-SMTPUTF8
+    250 CHUNKING
+    STARTTLS
+    220 2.0.0 Ready to start TLS
+    EHLO smtp.kth.se
+    Connection closed by foreign host.
+    */
     public static void main(String[] args) {
         try (Scanner file = new Scanner(new File(credentials))) {
             userName = file.nextLine();
@@ -142,27 +163,6 @@ public class SendMail {
         }
     }
 
-/*
-telnet smtp.kth.se 587
-Trying 2001:6b0:1:1300:250:56ff:fead:4565...
-Connected to smtp.kth.se.
-Escape character is '^]'.
-220 smtp-5.sys.kth.se ESMTP Postfix
-EHLO smtp.kth.se
-250-smtp-5.sys.kth.se
-250-PIPELINING
-250-SIZE 41943040
-250-STARTTLS
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250-SMTPUTF8
-250 CHUNKING
-STARTTLS
-220 2.0.0 Ready to start TLS
-EHLO smtp.kth.se
-Connection closed by foreign host.
 
- */
 
 }
