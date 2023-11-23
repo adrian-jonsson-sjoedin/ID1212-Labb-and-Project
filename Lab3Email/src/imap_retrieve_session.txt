@@ -1,0 +1,56 @@
+❯ openssl s_client -connect webmail.kth.se:993 -crlf -quiet
+depth=2 C = US, ST = New Jersey, L = Jersey City, O = The USERTRUST Network, CN = USERTrust RSA Certification Authority
+verify return:1
+depth=1 C = NL, O = GEANT Vereniging, CN = GEANT OV RSA CA 4
+verify return:1
+depth=0 C = SE, ST = Stockholms l\C3\A4n, O = Kungliga Tekniska H\C3\B6gskolan, CN = webmail.kth.se
+verify return:1
+* OK The Microsoft Exchange IMAP4 service is ready.
+a01 login adriansj@ug.kth.se PASSWORD
+a01 OK LOGIN completed.
+a02 select inbox
+* 709 EXISTS
+* 1 RECENT
+* FLAGS (\Seen \Answered \Flagged \Deleted \Draft $MDNSent)
+* OK [PERMANENTFLAGS (\Seen \Answered \Flagged \Deleted \Draft $MDNSent)] Permanent flags
+* OK [UNSEEN 457] Is the first unseen message
+* OK [UIDVALIDITY 14] UIDVALIDITY value
+* OK [UIDNEXT 7286] The next unique identifier value
+a02 OK [READ-WRITE] SELECT completed.
+a03 fetch 2 body[text]
+* 2 FETCH (BODY[TEXT] {1132}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<style>p, b{color:#444444;} a{color:#24a0d8;}</style>
+    <p>
+        Har hänt inom dina prenumerationer i Kurs- Program- och Gruppwebbarna
+        <br>
+        <b>fredag 2016-08-12</b>(00:00) - <b>lördag 2016-08-13</b>(04:42)
+    </p>
+    <br>
+    <p>
+      Du kan även gå till ditt samlade <a href="http://www.kth.se/social/home/subscriptions/">Nyhetsflöde</a> för att se nyheterna nedan.
+    </p>
+
+        <div>
+            <br>
+            <b>Fysik för basår I (KH0022) / HT 2016 TBASD</b>
+
+                <p>
+                    <span style="color:#b0c92b">Schemahändelse</span> <a href="https://www.kth.se/social/course/KH0022/subgroup/ht-2016-tbasd-3/event/8670/">&quot;Övning, 19 september 2016 13:00&quot;</a> har redigerats 1 gång.
+                </p>
+
+        </div>
+        <br>
+
+
+
+--
+
+<p>Du kan ändra vilka dagliga sammanfattningar som skickas i <a href="http://www.kth.se/social/home/settings/">Mina Inställningar prenumerationer</a>.</p>
+
+</html>
+
+ FLAGS (\Seen))
+a03 OK FETCH completed.
