@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/Lab4Quiz">
+<Resource name="jdbc/derby" auth="Container" type="javax.sql.DataSource"
+maxActive="50" maxIdle="30" maxWait="10000"
+username="test" password="test"
+driverClassName="org.apache.derby.jdbc.ClientDriver"
+url="jdbc:derby://localhost:1527/test" />
+</Context>
