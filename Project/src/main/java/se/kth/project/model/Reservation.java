@@ -11,10 +11,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-//@Table(name = "Courses")
-public class Courses {
+@Table(name = "reservations")
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "list_id")
+    private List list;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+//    @Column(name = "coop_id")
+//    private int coopId;
+    @Column(nullable = false)
+    private int sequence;
 }
