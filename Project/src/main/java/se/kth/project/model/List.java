@@ -1,11 +1,11 @@
 package se.kth.project.model;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class List {
     @Column(nullable = false)
     private String location;
 
-//    @Temporal(TemporalType.TIMESTAMP)
+    //    @Temporal(TemporalType.TIMESTAMP)
 //    @Column(nullable = false)
 //    private Timestamp start;
     private LocalDateTime start;
