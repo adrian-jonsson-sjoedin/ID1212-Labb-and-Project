@@ -17,16 +17,20 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne // vilken listan är det som bokningen/reservationen hör till.
     @JoinColumn(name = "list_id")
     private List list;
 
-    @ManyToOne
+    @ManyToOne // vem är (studenten) som gjort bokningen
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @Column(name = "coop_id")
-//    private int coopId;
+    @ManyToOne // vem är (eventuell) medarbetare (också student)
+    @JoinColumn(name = "coop_id", nullable = true)
+    private User coopId; // second user id fk
+
+    // sequence börjar med 0 -> max_slots, första bokning
+    // är starttid, nästa är starttid + interval (från lists)
     @Column(nullable = false)
     private int sequence;
 }

@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -21,11 +19,13 @@ public class List {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "course_id")
-    private int courseId;
+    @ManyToOne // FK till vilken kurs som listan ska höra till
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne // Anger vilken av administratörerna som har skapat bokningslistan
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String description;
@@ -33,9 +33,7 @@ public class List {
     @Column(nullable = false)
     private String location;
 
-    //    @Temporal(TemporalType.TIMESTAMP)
-//    @Column(nullable = false)
-//    private Timestamp start;
+    // tidsintervallet mellan varje redovisning i minuter
     private LocalDateTime start;
 
     @Column(nullable = false)
@@ -44,6 +42,14 @@ public class List {
     @Column(nullable = false)
     private int max_slots;
 
-    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
-    private Set<Reservation> reservations = new HashSet<>();
+    /*
+    Assistent Beda skapar en zoom-bokningslista för 8 labbar med 15 minuters
+    mellanrum på ID1212 med titeln "labbar" som börjar 23:e dec kl 10:15
+    INSERT INTO lists(course_id, user_id, description, location, start,
+    interval,max_slots) VALUES (1, 2, 'labbar', 'zoom', TIMESTAMP('2023-12-23
+    10:15:00.00'),15,8);
+    INSERT INTO lists(course_id, user_id, description, location, start,
+    interval,max_slots) VALUES (1, 2,'projekt', 'Ka-309', TIMESTAMP('2023-12-23
+    13:15:00.00'),30,4);
+     */
 }
