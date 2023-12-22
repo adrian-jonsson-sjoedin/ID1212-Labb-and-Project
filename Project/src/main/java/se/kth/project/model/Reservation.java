@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne // vilken listan är det som bokningen/reservationen hör till.
     @JoinColumn(name = "list_id")
@@ -23,11 +23,11 @@ public class Reservation {
 
     @ManyToOne // vem är (studenten) som gjort bokningen
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne // vem är (eventuell) medarbetare (också student)
     @JoinColumn(name = "coop_id", nullable = true)
-    private User coopId; // second user id fk
+    private UserEntity coopId; // second user id fk
 
     // sequence börjar med 0 -> max_slots, första bokning
     // är starttid, nästa är starttid + interval (från lists)

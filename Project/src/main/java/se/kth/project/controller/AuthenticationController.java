@@ -1,17 +1,18 @@
 package se.kth.project.controller;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import se.kth.project.dto.UserDTO;
+import se.kth.project.dto.RegistrationDTO;
+import se.kth.project.model.UserEntity;
 import se.kth.project.service.UserService;
 
 @Controller
-//@RequestMapping("")
 public class AuthenticationController {
     private UserService userService;
 
@@ -26,36 +27,52 @@ public class AuthenticationController {
         return "redirect:/login";
     }
     @GetMapping("/login")
-    public String displayLoginForm(){
+    public String displayLoginPage(){
         return "login";
     }
 
-    @PostMapping("/login")
-    public String handleLogin(@RequestParam("username") String username,
-                              @RequestParam("password") String password,
-                              Model model,
-                              HttpSession session) {
-        UserDTO user = userService.retrieveUser(username, password);
-        if (user != null && user.isAdmin()) {
-            System.out.println(user.getUsername());
-            session.setAttribute("user", user);
-//            model.addAttribute("user", user);
-            return "redirect:/home-admin";
-        }else if(user != null && !user.isAdmin()){
-            session.setAttribute("user", user);
-            return "redirect:/home-student";
-        }else {
-            model.addAttribute("LoginStatus", "notFound");
-            return "login";
-        }
+    @GetMapping("/register")
+    public String getRegisterForm(Model model) {
+        RegistrationDTO user = new RegistrationDTO();
+        model.addAttribute("user", user);
+        return "register";
     }
-//    @GetMapping("/logout")
-//    public String handleLogout(HttpSession session, HttpServletResponse response){
-//        session.invalidate();
-//        // Add cache control headers to prevent browser caching
-//        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-//        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-//        response.setHeader("Expires", "0"); // Proxies.
-//        return "redirect:/login";
+
+    @PostMapping("/register/save")
+    public String register(@Valid @ModelAttribute("user")RegistrationDTO user,
+                           BindingResult result, Model model) {
+        UserEntity existingUsername = userService.findByUsername(user.getUsername());
+        if(existingUsername != null && existingUsername.getUsername() != null && !existingUsername.getUsername().isEmpty()) {
+            return "redirect:/register?fail";
+        }
+
+        if(result.hasErrors()) {
+            model.addAttribute("user", user);
+            return "register";
+        }
+
+        userService.saveUser(user);
+        return "redirect:/home-admin?success";
+    }
+
+//    @PostMapping("/login")
+//    public String handleLogin(@RequestParam("username") String username,
+//                              @RequestParam("password") String password,
+//                              Model model,
+//                              HttpSession session) {
+//        UserDTO user = userService.retrieveUser(username, password);
+//        if (user != null && user.isAdmin()) {
+//            System.out.println(user.getUsername());
+//            session.setAttribute("user", user);
+////            model.addAttribute("user", user);
+//            return "redirect:/home-admin";
+//        }else if(user != null && !user.isAdmin()){
+//            session.setAttribute("user", user);
+//            return "redirect:/home-student";
+//        }else {
+//            model.addAttribute("LoginStatus", "notFound");
+//            return "login";
+//        }
 //    }
+
 }

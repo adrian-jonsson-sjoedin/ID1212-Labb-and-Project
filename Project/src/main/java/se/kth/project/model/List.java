@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class List {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne // FK till vilken kurs som listan ska höra till
     @JoinColumn(name = "course_id")
@@ -25,7 +25,7 @@ public class List {
 
     @ManyToOne // Anger vilken av administratörerna som har skapat bokningslistan
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false)
     private String description;
