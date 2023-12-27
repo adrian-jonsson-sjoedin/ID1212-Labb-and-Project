@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.RegistrationDTO;
 import se.kth.project.model.UserEntity;
-import se.kth.project.security.CustomUserDetailsService;
 import se.kth.project.service.UserService;
 
 @Controller
 public class AuthenticationController {
     private UserService userService;
-    private CustomUserDetailsService userDetailsService;
+
 
     @Autowired
     public AuthenticationController(UserService userService) {
@@ -63,24 +62,6 @@ public class AuthenticationController {
         }
     }
 
-//    @PostMapping("/login")
-//    public String handleLogin(@RequestParam("username") String username,
-//                              @RequestParam("password") String password,
-//                              Model model,
-//                              HttpSession session) {
-//        UserDTO user = userService.retrieveUser(username, password);
-//        if (user != null && user.isAdmin()) {
-//            System.out.println(user.getUsername());
-//            session.setAttribute("user", user);
-////            model.addAttribute("user", user);
-//            return "redirect:/home-admin";
-//        }else if(user != null && !user.isAdmin()){
-//            session.setAttribute("user", user);
-//            return "redirect:/home-student";
-//        }else {
-//            model.addAttribute("LoginStatus", "notFound");
-//            return "login";
-//        }
-//    }
+
 
 }
