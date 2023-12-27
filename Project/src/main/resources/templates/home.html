@@ -7,7 +7,7 @@
     <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
     <!--    <meta name="description" content="" />-->
     <!--    <meta name="author" content="" />-->
-    <title>Home - Admin</title>
+    <title th:text="'Home - ' + ${#authentication.authorities}"></title>
     <!--    &lt;!&ndash; Favicon&ndash;&gt;-->
     <!--    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />-->
     <!--    &lt;!&ndash; Core theme CSS (includes Bootstrap)&ndash;&gt;-->
@@ -16,14 +16,15 @@
 <body class="d-flex flex-column h-100">
 
 <!-- Page content-->
-<section layout:fragment="body" class="py-5" >
+<section layout:fragment="body" class="py-5">
     <div class="container">
         <div class="text-center mt-5">
-            <!--            <h1 th:text="'Welcome ' + ${#ctx.session.user.getUsername()} + '!'"></h1>-->
+            <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
             <p class="lead">This will be the admin home page</p>
-
-            <a class="nav-link btn btn-primary"  th:href="@{/register}">Add new Admin/Student</a>
-
+        <!-- Conditionally render the register new user button based on what role is saved in userRole-->
+            <div th:if="${#strings.equals(session.userRole, 'Admin')}">
+                <a class="nav-link btn btn-primary" th:href="@{/register}">Add new Admin/Student</a>
+            </div>
         </div>
     </div>
 </section>

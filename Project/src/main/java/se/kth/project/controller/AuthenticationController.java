@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.RegistrationDTO;
 import se.kth.project.model.UserEntity;
+import se.kth.project.security.CustomUserDetailsService;
 import se.kth.project.service.UserService;
 
 @Controller
 public class AuthenticationController {
     private UserService userService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     public AuthenticationController(UserService userService) {
@@ -26,8 +28,9 @@ public class AuthenticationController {
 
         return "redirect:/login";
     }
+
     @GetMapping("/login")
-    public String displayLoginPage(){
+    public String displayLoginPage() {
         return "login";
     }
 
@@ -38,21 +41,26 @@ public class AuthenticationController {
         return "register";
     }
 
+
     @PostMapping("/register/save")
-    public String register(@Valid @ModelAttribute("user")RegistrationDTO user,
+    public String register(@Valid @ModelAttribute("user") RegistrationDTO user,
                            BindingResult result, Model model) {
         UserEntity existingUsername = userService.findByUsername(user.getUsername());
-        if(existingUsername != null && existingUsername.getUsername() != null && !existingUsername.getUsername().isEmpty()) {
+        if (existingUsername != null && existingUsername.getUsername() != null && !existingUsername.getUsername().isEmpty()) {
             return "redirect:/register?fail";
         }
 
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "register";
         }
 
-        userService.saveUser(user);
-        return "redirect:/home-admin?success";
+        int status = userService.saveUser(user);
+        if (status == 0) {
+            return "redirect:/home?success";
+        }else {
+            return "redirect:/register?unauthorized";
+        }
     }
 
 //    @PostMapping("/login")

@@ -7,6 +7,7 @@ import se.kth.project.dto.RegistrationDTO;
 import se.kth.project.dto.UserDTO;
 import se.kth.project.model.UserEntity;
 import se.kth.project.repository.UserRepository;
+import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.UserService;
 
 import java.util.List;
@@ -19,23 +20,38 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
 
-
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Saves a new user based on the provided registration information.
+     * <p>
+     * This method checks the role of the currently authenticated user using
+     * {@link SecurityUtil#getSessionUserRole()}. If the user has the role of "admin",
+     * a new user is created and saved to the database with the provided registration details.
+     * The password is encoded using the configured password encoder.
+     *
+     * @param registrationDTO The data transfer object containing user registration information.
+     * @return 0 if the user is successfully saved by an admin; -1 otherwise.
+     */
     @Override
-    public void saveUser(RegistrationDTO registrationDTO) {
-        UserEntity user = new UserEntity();
-        user.setUsername(registrationDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
-//        user.setPassword(registrationDTO.getPassword());
-        user.setAdmin(registrationDTO.isAdmin());
-//        user.setAdmin(true);
-        userRepository.save(user);
+    public int saveUser(RegistrationDTO registrationDTO) {
+        String role = SecurityUtil.getSessionUserRole();
+        System.out.println(role);
+        if ("admin".equalsIgnoreCase(role)) {
+            UserEntity user = new UserEntity();
+            user.setUsername(registrationDTO.getUsername());
+            user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
+            user.setAdmin(registrationDTO.isAdmin());
+            userRepository.save(user);
+            return 0;
+        }
+        return -1;
     }
+
     /**
      * Retrieves the user with matching username and password from the db.
      *

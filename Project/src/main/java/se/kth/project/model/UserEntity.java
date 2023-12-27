@@ -29,7 +29,7 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean admin;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "course_access",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

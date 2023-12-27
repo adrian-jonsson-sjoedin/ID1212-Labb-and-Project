@@ -29,15 +29,18 @@ public class CustomUserDetailsService implements UserDetailsService {
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
             if (user.isAdmin()) {
-                authorities.add(new SimpleGrantedAuthority("ADMIN"));
+                authorities.add(new SimpleGrantedAuthority("Admin"));
             } else {
-                authorities.add(new SimpleGrantedAuthority("STUDENT"));
+                authorities.add(new SimpleGrantedAuthority("Student"));
             }
             User authUser = new User(
                     user.getUsername(),
                     user.getPassword(),
                     authorities
             );
+            for (SimpleGrantedAuthority authority : authorities) {
+                System.out.println(authority);
+            }
             return authUser;
         } else {
             throw new UsernameNotFoundException("Invalid username or password");
