@@ -1,0 +1,35 @@
+<!-- reservation-list.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Reservation List</title>
+</head>
+<section layout:fragment="body">
+
+    <div class="main">
+        <div class="col-md-12">
+            <h2>Reservation List</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Start Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reservation : ${reservations}">
+                    <td th:text="${reservation.id}"></td>
+                    <td th:text="${reservation.description}"></td>
+                    <td th:text="${reservation.location}"></td>
+                    <td th:text="${#dates.format(reservation.start, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+</html>
