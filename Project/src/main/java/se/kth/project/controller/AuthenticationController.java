@@ -22,7 +22,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String redirectToLogin() {
 
         return "redirect:/login";
@@ -61,7 +61,5 @@ public class AuthenticationController {
             return "redirect:/register?unauthorized";
         }
     }
-
-
 
 }
