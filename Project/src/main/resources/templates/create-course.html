@@ -1,0 +1,54 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Create Course</title>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body">
+        <div class="container">
+            <div class="mt-1">
+                <h4>Existing courses</h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td th:text="${course.id}"></td>
+                        <td th:text="${course.title}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-1">
+                <h4>Create new course</h4>
+                <div th:if="${param.null}" class="alert alert-danger">
+                    Title can not be empty</div>
+                <form role="form" method="post" th:action="@{/create-course/save}" th:object="${course}" >
+                    <div class="form-group my-1">
+                        <label for="courseDescription">Enter course id and name </label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="courseDescription"
+                               placeholder="E.g. ID1212-Network Programming"
+                                th:field="*{title}">
+                    </div>
+                    <!--                <div class="form-group">-->
+                    <!--                    <label for="formGroupExampleInput2">Another label</label>-->
+                    <!--                    <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input">-->
+                    <!--                </div>-->
+                    <button  type="submit" class="btn btn-primary my-1">Create new course</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

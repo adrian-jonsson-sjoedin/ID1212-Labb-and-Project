@@ -7,7 +7,7 @@
 </head>
 <section layout:fragment="body">
 
-  <div class="main">
+  <div class="main mx-3 my-3" >
     <div class="col-md-6 col-sm-12">
       <div th:if="${param.fail}" class="alert alert-danger">
         Username or email already exists</div>
@@ -44,7 +44,7 @@
           </div>
           <p th:if="${#fields.hasErrors('admin')}" class="text-danger"></p>
 <!--          <button th:href="@{/login}" type="submit" class="btn btn-black">Login here.</button>-->
-          <button th:href="@{/register}" type="submit" class="btn btn-secondary">Register</button>
+          <button th:href="@{/register}" type="submit" class="btn btn-primary">Register</button>
         </form>
       </div>
     </div>
