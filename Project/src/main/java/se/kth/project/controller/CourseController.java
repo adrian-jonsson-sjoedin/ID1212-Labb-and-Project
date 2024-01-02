@@ -36,8 +36,11 @@ public class CourseController {
     public String createNewCourse(@Valid @ModelAttribute("course") CourseDTO course,
                                   BindingResult result,
                                   Model model) {
-
-        if(result.hasErrors()){
+        Course existingCourse = courseService.findByTitle(course.getTitle());
+        if(existingCourse != null && existingCourse.getTitle() != null && !existingCourse.getTitle().isEmpty()){
+            return "redirect:/create-course?fail";
+        }
+        if (result.hasErrors()) {
             //Need to add the courses again to repopulate the course list in the view
             List<Course> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);

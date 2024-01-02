@@ -28,6 +28,8 @@
             </div>
             <div class="mt-1">
                 <h4>Create new course</h4>
+                <div th:if="${param.fail}" class="alert alert-danger">
+                    A course with this name already exists. See the list above for already existing courses.</div>
                 <form role="form" method="post" th:action="@{/create-course/save}" th:object="${course}" >
                     <div class="form-group my-1">
                         <label for="courseDescription">Enter course id and name </label>

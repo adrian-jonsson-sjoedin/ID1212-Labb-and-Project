@@ -29,4 +29,9 @@ public class CourseServiceImpl implements CourseService {
         course.setTitle(courseDTO.getTitle());
         courseRepository.save(course);
     }
+
+    @Override
+    public Course findByTitle(String title) {
+        return courseRepository.findByTitle(title);
+    }
 }

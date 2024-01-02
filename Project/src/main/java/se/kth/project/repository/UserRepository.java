@@ -11,6 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     List<UserEntity> findAllByAdminIsFalse();
 
-        UserEntity findFirstByUsername(String username);
+    UserEntity findFirstByUsername(String username);
+
     UserEntity findByUsername(String userName);
 }
