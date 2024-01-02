@@ -10,10 +10,10 @@ import lombok.Data;
 //@Builder
 public class RegistrationDTO {
     private Integer userId;
-    @NotEmpty
+    @NotEmpty(message = "You must provide a username.")
     private String username;
-    @NotEmpty
+    @NotEmpty(message = "You must provide a password.")
     private String password;
-    @NotNull
+    @NotNull(message = "You must select if the new user is an admin or not.")
     private boolean admin;
 }
