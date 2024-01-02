@@ -1,11 +1,14 @@
 package se.kth.project.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import se.kth.project.dto.CourseDTO;
 import se.kth.project.model.Course;
 import se.kth.project.service.CourseService;
 
@@ -22,7 +25,7 @@ public class CourseController {
 
     @GetMapping("/create-course")
     public String createCourseForm(Model model) {
-        Course course = new Course();
+        CourseDTO course = new CourseDTO();
         model.addAttribute("course", course);
         List<Course> courses = courseService.getAllCourses();
         model.addAttribute("courses", courses);
@@ -30,12 +33,18 @@ public class CourseController {
     }
 
     @PostMapping("/create-course/save")
-    public String createNewCourse(@ModelAttribute("course") Course course) {
-        int status = courseService.saveCourse(course);
-        if (status == 0) {
-            return "redirect:/home?success";
-        }else {
-            return "redirect:/create-course?null";
+    public String createNewCourse(@Valid @ModelAttribute("course") CourseDTO course,
+                                  BindingResult result,
+                                  Model model) {
+
+        if(result.hasErrors()){
+            //Need to add the courses again to repopulate the course list in the view
+            List<Course> courses = courseService.getAllCourses();
+            model.addAttribute("courses", courses);
+
+            return "create-course";
         }
+        courseService.saveCourse(course);
+        return "redirect:/home?success";
     }
 }

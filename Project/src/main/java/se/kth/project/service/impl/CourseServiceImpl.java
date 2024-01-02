@@ -2,6 +2,7 @@ package se.kth.project.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.kth.project.dto.CourseDTO;
 import se.kth.project.model.Course;
 import se.kth.project.repository.CourseRepository;
 import se.kth.project.service.CourseService;
@@ -23,13 +24,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public int saveCourse(Course newCourse) {
-        if (!newCourse.getTitle().isEmpty()) {
-            courseRepository.save(newCourse);
-            return 0;
-        } else {
-            return -1;
-        }
-
+    public void saveCourse(CourseDTO courseDTO) {
+        Course course = new Course();
+        course.setTitle(courseDTO.getTitle());
+        courseRepository.save(course);
     }
 }

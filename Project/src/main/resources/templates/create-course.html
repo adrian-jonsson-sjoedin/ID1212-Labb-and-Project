@@ -28,8 +28,6 @@
             </div>
             <div class="mt-1">
                 <h4>Create new course</h4>
-                <div th:if="${param.null}" class="alert alert-danger">
-                    Title can not be empty</div>
                 <form role="form" method="post" th:action="@{/create-course/save}" th:object="${course}" >
                     <div class="form-group my-1">
                         <label for="courseDescription">Enter course id and name </label>
@@ -40,10 +38,7 @@
                                placeholder="E.g. ID1212-Network Programming"
                                 th:field="*{title}">
                     </div>
-                    <!--                <div class="form-group">-->
-                    <!--                    <label for="formGroupExampleInput2">Another label</label>-->
-                    <!--                    <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input">-->
-                    <!--                </div>-->
+                    <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>
                     <button  type="submit" class="btn btn-primary my-1">Create new course</button>
                 </form>
             </div>
