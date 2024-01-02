@@ -8,6 +8,7 @@ import se.kth.project.repository.CourseRepository;
 import se.kth.project.service.CourseService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service implementation for handling operations related to courses.
@@ -34,8 +35,16 @@ public class CourseServiceImpl implements CourseService {
      * @return A list of all courses.
      */
     @Override
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseDTO> getAllCourses() {
+        List<Course> courses = courseRepository.findAll();
+        return courses.stream().map(this::convertToCourseDTO).collect(Collectors.toList());
+//        return courseRepository.findAll();
+    }
+
+    private CourseDTO convertToCourseDTO(Course course) {
+        return new CourseDTO(
+                course.getId(),
+                course.getTitle());
     }
 
     /**

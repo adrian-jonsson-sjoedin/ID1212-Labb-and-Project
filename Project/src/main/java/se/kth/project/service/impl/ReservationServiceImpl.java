@@ -2,8 +2,11 @@ package se.kth.project.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import se.kth.project.dto.ListDTO;
 import se.kth.project.model.Reservation;
 import se.kth.project.repository.ReservationRepository;
+import se.kth.project.repository.UserRepository;
 import se.kth.project.service.ReservationService;
 
 import java.util.List;
@@ -12,10 +15,12 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository) {
         this.reservationRepository = reservationRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -43,5 +48,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void deleteReservation(int reservationId) {
         reservationRepository.deleteById(reservationId);
+    }
+
+    @Override
+    public void saveReservationList(ListDTO list) {
+
     }
 }

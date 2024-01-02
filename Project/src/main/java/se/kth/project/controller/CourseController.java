@@ -1,6 +1,5 @@
 package se.kth.project.controller;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +26,11 @@ public class CourseController {
     }
 
     @GetMapping("/create-course")
-    public String createCourseForm(Model model, HttpSession session) {
-        if (SecurityUtil.isUserAdmin(session)) {
+    public String createCourseForm(Model model) {
+        if (SecurityUtil.isUserAdmin()) {
             CourseDTO course = new CourseDTO();
             model.addAttribute("course", course);
-            List<Course> courses = courseService.getAllCourses();
+            List<CourseDTO> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);
             return "create-course";
         } else {
@@ -50,21 +49,21 @@ public class CourseController {
         }
         if (result.hasErrors()) {
             //Need to add the courses again to repopulate the course list in the view
-            List<Course> courses = courseService.getAllCourses();
+            List<CourseDTO> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);
             model.addAttribute("course", course);
             return "create-course";
         }
         courseService.saveCourse(course);
-        return "redirect:/home?success";
+        return "redirect:/create-course?success";
     }
 
     @GetMapping("/create-course/{courseId}/delete")
-    public String deleteCourse(@PathVariable("courseId") Integer courseId, Model model, HttpSession session) {
-        if (SecurityUtil.isUserAdmin(session)) {
+    public String deleteCourse(@PathVariable("courseId") Integer courseId, Model model) {
+        if (SecurityUtil.isUserAdmin()) {
             courseService.delete(courseId);
             //Need to add the courses again to repopulate the course list in the view
-            List<Course> courses = courseService.getAllCourses();
+            List<CourseDTO> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);
             return "redirect:/create-course";
         } else {

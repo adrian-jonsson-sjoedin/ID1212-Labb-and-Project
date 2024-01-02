@@ -1,0 +1,84 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Create New Reservation List</title>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body">
+        <div class="container">
+            <form role="form" method="post" th:action="@{/create-reservation-list/save}" th:object="${list}">
+
+                <div class="form-group col-md-4">
+                    <label for="courseSelect">Course</label>
+                    <select id="courseSelect" class="form-control" th:field="*{courseId}">
+                        <option th:each="course : ${courses}"
+                                th:value="${course.courseId}"
+                                th:text="${course.title}">
+                        </option>
+                    </select>
+                </div>
+                <p th:if="${#fields.hasErrors('courseId')}" class="text-danger" th:errors="*{courseId}"></p>
+
+                <div class="form-group col-md-6">
+                    <label for="listDescription">Description</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="listDescription"
+                            placeholder="Provide a description over what kind of booking list this is."
+                            th:field="*{description}">
+                </div>
+                <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="location"
+                            placeholder="E.g. F2 Main Campus, Sal-A Kista Campus, Zoom etc."
+                            th:field="*{location}">
+                </div>
+                <p th:if="${#fields.hasErrors('location')}" class="text-danger" th:errors="*{location}"></p>
+
+                <div class="form-group">
+                    <label for="startTime">Start time</label>
+                    <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="startTime"
+                            placeholder="Select date and time"
+                            th:field="*{start}">
+                </div>
+                <p th:if="${#fields.hasErrors('start')}" class="text-danger" th:errors="*{start}"></p>
+
+                <div class="form-group col-md-6">
+                    <label for="intervalMinutes">Allotted time for each booking in minutes</label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="intervalMinutes"
+                            th:field="*{intervall}">
+                </div>
+                <p th:if="${#fields.hasErrors('intervall')}" class="text-danger" th:errors="*{intervall}"></p>
+
+                <div class="form-group col-md-6">
+                    <label for="maximumSlots">Number of slots</label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="maximumSlots"
+                            th:field="*{maxSlots}">
+                </div>
+                <p th:if="${#fields.hasErrors('maxSlots')}" class="text-danger" th:errors="*{maxSlots}"></p>
+
+                <button type="submit" class="btn btn-primary">Create new reservation list</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>

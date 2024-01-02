@@ -1,6 +1,5 @@
 package se.kth.project.security;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +18,7 @@ public class SecurityUtil {
      *
      * @return The role, Admin or Student, of the authenticated user, or {@code null} if the user is not authenticated.
      */
-    public static String getSessionUserRole() {
+    private static String getSessionUserRole() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -27,20 +26,25 @@ public class SecurityUtil {
             GrantedAuthority authority = authentication.getAuthorities().stream().findFirst().orElse(null);
 
             if (authority != null) {
-                return authority.getAuthority();
+                return authority.getAuthority().toLowerCase();
             }
         }
         return null;
     }
+
     public static String getSessionUser() {
-        Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }
         return null;
     }
-    public static boolean isUserAdmin(HttpSession session) {
-        String userRole = session.getAttribute("userRole").toString().toLowerCase();
-        return userRole.equals("admin");
+
+    public static boolean isUserAdmin() {
+        String userRole = getSessionUserRole();
+        if (userRole != null) {
+            return userRole.equals("admin");
+        }
+        return false;
     }
 }

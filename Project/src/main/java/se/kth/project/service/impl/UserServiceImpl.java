@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
      * Saves a new user based on the provided registration information.
      * <p>
      * This method checks the role of the currently authenticated user using
-     * {@link SecurityUtil#getSessionUserRole()}. If the user has the role of "admin",
+     * {@link SecurityUtil#isUserAdmin()}. If the user has the role of "admin",
      * a new user is created and saved to the database with the provided registration details.
      * The password is encoded using the configured password encoder.
      *
@@ -44,9 +44,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int saveUser(RegistrationDTO registrationDTO) {
-        String role = SecurityUtil.getSessionUserRole();
-        System.out.println(role);
-        if ("admin".equalsIgnoreCase(role)) {
+        if (SecurityUtil.isUserAdmin()) {
             UserEntity user = new UserEntity();
             user.setUsername(registrationDTO.getUsername());
             user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));

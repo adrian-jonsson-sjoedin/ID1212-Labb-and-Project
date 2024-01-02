@@ -6,7 +6,7 @@ import se.kth.project.model.Course;
 import java.util.List;
 
 public interface CourseService {
-    List<Course> getAllCourses();
+    List<CourseDTO> getAllCourses();
     void saveCourse(CourseDTO courseDTO);
     Course findByTitle(String title);
 

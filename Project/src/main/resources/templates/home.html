@@ -22,10 +22,13 @@
             <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
             <p class="lead">This will be the admin home page</p>
         <!-- Conditionally render the register new user button based on what role is saved in userRole-->
-            <div th:if="${#strings.equals(session.userRole, 'Admin')}">
+            <div th:if="${#strings.equals(session.userRole, 'admin')}">
                 <a class="nav-link btn btn-primary my-1" th:href="@{/register}">Add new Admin/Student</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/create-course}">See courses/Create new course</a>
+                <a class="nav-link btn btn-primary my-1" th:href="@{/create-reservation-list}">Create new reservation list</a>
+
             </div>
+            <a class="nav-link btn btn-primary my-1" th:href="@{/reservation-list}">See reservation lists</a>
         </div>
     </div>
 </section>

@@ -39,8 +39,8 @@ public class List {
     @Column(nullable = false)
     private int intervall; //interval is a reserved keyword in MySQL
 
-    @Column(nullable = false)
-    private int max_slots;
+    @Column(name="max_slots", nullable = false)
+    private int maxSlots;
 
     /*
     Assistent Beda skapar en zoom-bokningslista för 8 labbar med 15 minuters

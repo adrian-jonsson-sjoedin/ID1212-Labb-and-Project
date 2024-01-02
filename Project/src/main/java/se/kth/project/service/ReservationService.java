@@ -1,5 +1,6 @@
 package se.kth.project.service;
 
+import se.kth.project.dto.ListDTO;
 import se.kth.project.model.Reservation;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface ReservationService {
     void updateReservation(Reservation reservation);
 
     void deleteReservation(int reservationId);
+
+    void saveReservationList(ListDTO list);
 }

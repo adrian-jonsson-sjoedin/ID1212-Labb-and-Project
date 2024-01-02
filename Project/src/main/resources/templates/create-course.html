@@ -21,9 +21,11 @@
                     </thead>
                     <tbody>
                     <tr th:each="course : ${courses}">
-                        <td th:text="${course.id}"></td>
+                        <td th:text="${course.courseId}"></td>
                         <td th:text="${course.title}"></td>
-                        <td class="text-end"><a class="btn btn-secondary" th:href="@{/create-course/{courseId}/delete(courseId=${course.id})}">Delete</a></td>
+                        <td class="text-end"><a class="btn btn-secondary"
+                                                th:href="@{/create-course/{courseId}/delete(courseId=${course.courseId})}">Delete</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -31,19 +33,20 @@
             <div class="mt-1">
                 <h4>Create new course</h4>
                 <div th:if="${param.fail}" class="alert alert-danger">
-                    A course with this name already exists. See the list above for already existing courses.</div>
-                <form role="form" method="post" th:action="@{/create-course/save}" th:object="${course}" >
+                    A course with this name already exists. See the list above for already existing courses.
+                </div>
+                <form role="form" method="post" th:action="@{/create-course/save}" th:object="${course}">
                     <div class="form-group my-1">
                         <label for="courseDescription">Enter course id and name </label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="courseDescription"
-                               placeholder="E.g. ID1212-Network Programming"
+                                placeholder="E.g. ID1212-Network Programming"
                                 th:field="*{title}">
                     </div>
                     <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>
-                    <button  type="submit" class="btn btn-primary my-1">Create new course</button>
+                    <button type="submit" class="btn btn-primary my-1">Create new course</button>
                 </form>
             </div>
         </div>

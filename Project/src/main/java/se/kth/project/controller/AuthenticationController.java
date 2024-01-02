@@ -1,6 +1,5 @@
 package se.kth.project.controller;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,8 +61,8 @@ public class AuthenticationController {
      * @return The view name for the registration form.
      */
     @GetMapping("/register")
-    public String getRegisterForm(Model model, HttpSession session) {
-        if (SecurityUtil.isUserAdmin(session)) {
+    public String getRegisterForm(Model model) {
+        if (SecurityUtil.isUserAdmin()) {
             RegistrationDTO user = new RegistrationDTO();
             model.addAttribute("user", user);
             return "register";
