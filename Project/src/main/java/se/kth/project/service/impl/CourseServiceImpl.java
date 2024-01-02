@@ -60,4 +60,9 @@ public class CourseServiceImpl implements CourseService {
     public Course findByTitle(String title) {
         return courseRepository.findByTitle(title);
     }
+
+    @Override
+    public void delete(Integer courseId) {
+        courseRepository.deleteById(courseId);
+    }
 }

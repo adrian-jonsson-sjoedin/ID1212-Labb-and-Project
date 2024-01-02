@@ -1,5 +1,7 @@
 package se.kth.project.security;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,5 +31,16 @@ public class SecurityUtil {
             }
         }
         return null;
+    }
+    public static String getSessionUser() {
+        Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return authentication.getName();
+        }
+        return null;
+    }
+    public static boolean isUserAdmin(HttpSession session) {
+        String userRole = session.getAttribute("userRole").toString().toLowerCase();
+        return userRole.equals("admin");
     }
 }

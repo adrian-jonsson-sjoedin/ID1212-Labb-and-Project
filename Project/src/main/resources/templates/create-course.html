@@ -16,12 +16,14 @@
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
+                        <th></th> <!-- Empty column for alignment -->
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="course : ${courses}">
                         <td th:text="${course.id}"></td>
                         <td th:text="${course.title}"></td>
+                        <td class="text-end"><a class="btn btn-secondary" th:href="@{/create-course/{courseId}/delete(courseId=${course.id})}">Delete</a></td>
                     </tr>
                     </tbody>
                 </table>

@@ -9,4 +9,6 @@ public interface CourseService {
     List<Course> getAllCourses();
     void saveCourse(CourseDTO courseDTO);
     Course findByTitle(String title);
+
+    void delete(Integer courseId);
 }

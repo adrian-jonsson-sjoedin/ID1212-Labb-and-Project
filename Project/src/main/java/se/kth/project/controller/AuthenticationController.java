@@ -1,5 +1,6 @@
 package se.kth.project.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.RegistrationDTO;
 import se.kth.project.model.UserEntity;
+import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.UserService;
 
 /**
@@ -60,10 +62,14 @@ public class AuthenticationController {
      * @return The view name for the registration form.
      */
     @GetMapping("/register")
-    public String getRegisterForm(Model model) {
-        RegistrationDTO user = new RegistrationDTO();
-        model.addAttribute("user", user);
-        return "register";
+    public String getRegisterForm(Model model, HttpSession session) {
+        if (SecurityUtil.isUserAdmin(session)) {
+            RegistrationDTO user = new RegistrationDTO();
+            model.addAttribute("user", user);
+            return "register";
+        } else {
+            return "redirect:/home";
+        }
     }
 
     /**
@@ -84,12 +90,10 @@ public class AuthenticationController {
         if (existingUsername != null && existingUsername.getUsername() != null && !existingUsername.getUsername().isEmpty()) {
             return "redirect:/register?fail";
         }
-
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "register";
         }
-
         int status = userService.saveUser(user);
         if (status == 0) {
             return "redirect:/home?success";
