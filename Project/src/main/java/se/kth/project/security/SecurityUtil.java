@@ -4,6 +4,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * Utility class for handling security-related operations.
+ * <p>
+ * This class provides a static method to retrieve the role of the currently authenticated user
+ * from the security context.
+ */
 public class SecurityUtil {
 
     /**

@@ -4,8 +4,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
-
+/**
+ * A DTO used when registrating/creating a new user on the application.
+ */
 @Data
 //@Builder
 public class RegistrationDTO {

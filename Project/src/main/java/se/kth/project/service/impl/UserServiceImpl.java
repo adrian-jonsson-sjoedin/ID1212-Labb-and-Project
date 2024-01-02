@@ -19,7 +19,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
-
+    /**
+     * Constructs a new instance of the {@code UserServiceImpl} class.
+     *
+     * @param userRepository  The repository for user-related database operations.
+     * @param passwordEncoder The password encoder for securing user passwords.
+     */
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -90,6 +95,14 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    /**
+     * Retrieves a user entity from the database based on the given username.
+     * <p>
+     * This method queries the underlying {@code userRepository} to find a user entity by the specified username.
+     *
+     * @param username The username of the user to be retrieved.
+     * @return The user entity associated with the provided username, or {@code null} if no user is found.
+     */
     @Override
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username);

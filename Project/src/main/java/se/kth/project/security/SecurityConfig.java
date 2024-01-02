@@ -13,20 +13,44 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * Configuration class for Spring Security.
+ * <p>
+ * This class defines security-related configurations such as authorization rules,
+ * login/logout behavior, and authentication manager settings.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private CustomUserDetailsService userDetailsService;
 
+    /**
+     * Constructs a new instance of the {@code SecurityConfig} class.
+     *
+     * @param userDetailsService The custom user details service for authentication.
+     */
     @Autowired
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Defines the password encoder bean for securely encoding and decoding passwords.
+     *
+     * @return The configured PasswordEncoder bean.
+     */
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /**
+     * Configures the security filter chain with authorization rules, login/logout behavior, etc.
+     *
+     * @param http The HttpSecurity object to configure.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(Customizer.withDefaults())
@@ -41,12 +65,18 @@ public class SecurityConfig {
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
-                .logout(
-                        logout ->
-                logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll());
+                .logout(logout -> logout.
+                        logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .permitAll());
         return http.build();
     }
 
+    /**
+     * Configures the AuthenticationManagerBuilder with the custom user details service and password encoder.
+     *
+     * @param builder The AuthenticationManagerBuilder to configure.
+     * @throws Exception If an error occurs during configuration.
+     */
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
