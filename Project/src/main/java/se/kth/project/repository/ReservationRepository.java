@@ -1,9 +1,9 @@
 package se.kth.project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import se.kth.project.model.Reservation;
+import se.kth.project.model.ReservationEntity;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+public interface ReservationRepository extends JpaRepository<ReservationEntity, Integer> {
 
-    // List<Reservation> findByUserId(int userId);
+    // ListEntity<ReservationEntity> findByUserId(int userId);
 }

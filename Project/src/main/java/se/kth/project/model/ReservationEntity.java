@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "reservations")
-public class Reservation {
+public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne // vilken listan är det som bokningen/reservationen hör till.
     @JoinColumn(name = "list_id")
-    private List list;
+    private ListEntity list;
 
     @ManyToOne // vem är (studenten) som gjort bokningen
     @JoinColumn(name = "user_id")

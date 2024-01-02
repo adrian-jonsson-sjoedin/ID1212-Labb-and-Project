@@ -3,11 +3,12 @@ package se.kth.project.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.CourseDTO;
-import se.kth.project.model.Course;
+import se.kth.project.model.CourseEntity;
 import se.kth.project.repository.CourseRepository;
 import se.kth.project.service.CourseService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +37,12 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public List<CourseDTO> getAllCourses() {
-        List<Course> courses = courseRepository.findAll();
+        List<CourseEntity> courses = courseRepository.findAll();
         return courses.stream().map(this::convertToCourseDTO).collect(Collectors.toList());
 //        return courseRepository.findAll();
     }
 
-    private CourseDTO convertToCourseDTO(Course course) {
+    private CourseDTO convertToCourseDTO(CourseEntity course) {
         return new CourseDTO(
                 course.getId(),
                 course.getTitle());
@@ -54,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public void saveCourse(CourseDTO courseDTO) {
-        Course course = new Course();
+        CourseEntity course = new CourseEntity();
         course.setTitle(courseDTO.getTitle());
         courseRepository.save(course);
     }
@@ -66,8 +67,19 @@ public class CourseServiceImpl implements CourseService {
      * @return The course with the specified title, or {@code null} if not found.
      */
     @Override
-    public Course findByTitle(String title) {
+    public CourseEntity findByTitle(String title) {
         return courseRepository.findByTitle(title);
+    }
+
+    @Override
+    public CourseEntity findById(Integer id) {
+        Optional<CourseEntity> courseEntityOptional = courseRepository.findById(id);
+        if(courseEntityOptional.isPresent()){
+            return courseEntityOptional.get();
+        }
+        else {
+            return null;
+        }
     }
 
     @Override

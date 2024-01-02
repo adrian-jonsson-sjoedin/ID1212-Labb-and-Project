@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "lists")
-public class List {
+public class ListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne // FK till vilken kurs som listan ska höra till
     @JoinColumn(name = "course_id")
-    private Course course;
+    private CourseEntity course;
 
     @ManyToOne // Anger vilken av administratörerna som har skapat bokningslistan
     @JoinColumn(name = "user_id")

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Builder
 @Entity
 @Table(name = "courses")
-public class Course {
+public class CourseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

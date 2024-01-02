@@ -35,5 +35,5 @@ public class UserEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id")}
     )
-    private List<Course> courses = new ArrayList<>();
+    private List<CourseEntity> courses = new ArrayList<>();
 }

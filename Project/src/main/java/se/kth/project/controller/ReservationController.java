@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.CourseDTO;
 import se.kth.project.dto.ListDTO;
-import se.kth.project.model.Reservation;
+import se.kth.project.model.CourseEntity;
+import se.kth.project.model.ReservationEntity;
 import se.kth.project.model.UserEntity;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
@@ -37,7 +38,7 @@ public class ReservationController {
 
     @GetMapping("/reservation-list")
     public String displayReservations(Model model) {
-        List<Reservation> reservations = reservationService.getAllReservations();
+        List<ReservationEntity> reservations = reservationService.getAllReservations();
         model.addAttribute("reservations", reservations);
         return "reservation-list";
     }
@@ -48,7 +49,7 @@ public class ReservationController {
             List<CourseDTO> courses = courseService.getAllCourses();
             ListDTO list = new ListDTO();
             model.addAttribute("courses", courses);
-            model.addAttribute("list",list);
+            model.addAttribute("list", list);
             return "create-reservation-list";
         }
         return "redirect:/home";
@@ -57,22 +58,24 @@ public class ReservationController {
     @PostMapping("/create-reservation-list/save")
     public String createNewReservationList(@Valid @ModelAttribute("list") ListDTO list,
                                            BindingResult result,
-                                           Model model){
-        if(result.hasErrors()){
+                                           Model model) {
+        if (result.hasErrors()) {
             List<CourseDTO> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);
-            model.addAttribute("list",list);
+            model.addAttribute("list", list);
             return "create-reservation-list";
         }
         String username = SecurityUtil.getSessionUser();
-        if(username != null) {
+        if (username != null) {
             UserEntity user = userService.findByUsername(username);
-            Integer userId = user.getId();
-            list.setUserId(userId);
+//            Integer userId = user.getId();
+            CourseEntity course = courseService.findById(list.getCourseId());
+            list.setUser(user);
+            list.setCourse(course);
             reservationService.saveReservationList(list);
-            return "redirect:/create-reservation-list?success";
+            return "redirect:/reservation-list?success";
         }
-
-        }
+        return "redirect:/create-reservation-list?error";
+    }
     // We can add more methods for creating, updating, or deleting reservations if needed
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.CourseDTO;
-import se.kth.project.model.Course;
+import se.kth.project.model.CourseEntity;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
 
@@ -43,7 +43,7 @@ public class CourseController {
     public String createNewCourse(@Valid @ModelAttribute("course") CourseDTO course,
                                   BindingResult result,
                                   Model model) {
-        Course existingCourse = courseService.findByTitle(course.getTitle());
+        CourseEntity existingCourse = courseService.findByTitle(course.getTitle());
         if (existingCourse != null && existingCourse.getTitle() != null && !existingCourse.getTitle().isEmpty()) {
             return "redirect:/create-course?fail";
         }

@@ -1,18 +1,18 @@
 package se.kth.project.service;
 
 import se.kth.project.dto.ListDTO;
-import se.kth.project.model.Reservation;
+import se.kth.project.model.ReservationEntity;
 
 import java.util.List;
 
 public interface ReservationService {
-    List<Reservation> getAllReservations();
+    List<ReservationEntity> getAllReservations();
 
-    Reservation getReservationById(int reservationId);
+    ReservationEntity getReservationById(int reservationId);
 
-    void createReservation(Reservation reservation);
+    void createReservation(ReservationEntity reservation);
 
-    void updateReservation(Reservation reservation);
+    void updateReservation(ReservationEntity reservation);
 
     void deleteReservation(int reservationId);
 
