@@ -23,7 +23,7 @@
                     placeholder="Username"
                     th:field="*{username}">
           </div>
-          <p th:if="${#fields.hasErrors('username')}" class="text-danger"></p>
+          <p th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></p>
 
           <div class="form-group">
             <label>Password</label>
@@ -33,7 +33,7 @@
                     placeholder="Password"
                     th:field="*{password}">
           </div>
-          <p th:if="${#fields.hasErrors('password')}" class="text-danger"></p>
+          <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>
 
           <div class="form-group">
             <label>Admin</label>
