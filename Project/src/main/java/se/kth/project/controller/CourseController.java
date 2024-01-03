@@ -34,7 +34,7 @@ public class CourseController {
             model.addAttribute("courses", courses);
             return "create-course";
         } else {
-            return "redirect:/home";
+            return "redirect:/home?unauthorized";
 
         }
     }
@@ -67,7 +67,17 @@ public class CourseController {
             model.addAttribute("courses", courses);
             return "redirect:/create-course";
         } else {
-            return "redirect:/home";
+            return "redirect:/home?unauthorized";
+        }
+    }
+    @GetMapping("/course-access")
+    public String setStudentCourseAccessForm(Model model){
+        if(SecurityUtil.isUserAdmin()){
+
+            return "course-access";
+        }
+        else {
+            return "redirect:/home?unauthorized";
         }
     }
 }

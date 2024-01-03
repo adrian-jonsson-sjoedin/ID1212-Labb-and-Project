@@ -67,7 +67,7 @@ public class AuthenticationController {
             model.addAttribute("user", user);
             return "register";
         } else {
-            return "redirect:/home";
+            return "redirect:/home?unauthorized";
         }
     }
 

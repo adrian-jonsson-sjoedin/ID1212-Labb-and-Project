@@ -10,6 +10,9 @@
 <!-- Page content-->
 <section layout:fragment="body" class="py-5">
     <div class="container">
+        <div th:if="${param.unauthorized}" class="alert alert-danger">
+           You don't have access to the requested page.
+        </div>
         <div class="text-center mt-5">
             <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
             <p class="lead">This will be the admin home page</p>

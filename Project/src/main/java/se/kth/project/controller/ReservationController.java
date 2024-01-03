@@ -52,7 +52,7 @@ public class ReservationController {
             model.addAttribute("list", list);
             return "create-list";
         }
-        return "redirect:/home";
+        return "redirect:/home?unauthorized";
     }
 
     @PostMapping("/create-list/save")
