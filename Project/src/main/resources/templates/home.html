@@ -3,15 +3,7 @@
       layout:decorate="~{layout}">
 
 <head>
-    <!--    <meta charset="utf-8" />-->
-    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
-    <!--    <meta name="description" content="" />-->
-    <!--    <meta name="author" content="" />-->
     <title th:text="'Home - ' + ${#authentication.authorities}"></title>
-    <!--    &lt;!&ndash; Favicon&ndash;&gt;-->
-    <!--    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />-->
-    <!--    &lt;!&ndash; Core theme CSS (includes Bootstrap)&ndash;&gt;-->
-    <!--    <link href="/css/styles.css" rel="stylesheet" />-->
 </head>
 <body class="d-flex flex-column h-100">
 
@@ -25,7 +17,7 @@
             <div th:if="${#strings.equals(session.userRole, 'admin')}">
                 <a class="nav-link btn btn-primary my-1" th:href="@{/register}">Add new Admin/Student</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/create-course}">See courses/Create new course</a>
-                <a class="nav-link btn btn-primary my-1" th:href="@{/create-reservation-list}">Create new reservation list</a>
+                <a class="nav-link btn btn-primary my-1" th:href="@{/create-list}">Create new list for reservations</a>
 
             </div>
             <a class="nav-link btn btn-primary my-1" th:href="@{/reservation-list}">See reservation lists</a>

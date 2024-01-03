@@ -43,19 +43,19 @@ public class ReservationController {
         return "reservation-list";
     }
 
-    @GetMapping("/create-reservation-list")
+    @GetMapping("/create-list")
     public String createReservationList(Model model) {
         if (SecurityUtil.isUserAdmin()) {
             List<CourseDTO> courses = courseService.getAllCourses();
             ListDTO list = new ListDTO();
             model.addAttribute("courses", courses);
             model.addAttribute("list", list);
-            return "create-reservation-list";
+            return "create-list";
         }
         return "redirect:/home";
     }
 
-    @PostMapping("/create-reservation-list/save")
+    @PostMapping("/create-list/save")
     public String createNewReservationList(@Valid @ModelAttribute("list") ListDTO list,
                                            BindingResult result,
                                            Model model) {
@@ -63,19 +63,17 @@ public class ReservationController {
             List<CourseDTO> courses = courseService.getAllCourses();
             model.addAttribute("courses", courses);
             model.addAttribute("list", list);
-            return "create-reservation-list";
+            return "create-list";
         }
         String username = SecurityUtil.getSessionUser();
         if (username != null) {
             UserEntity user = userService.findByUsername(username);
-//            Integer userId = user.getId();
             CourseEntity course = courseService.findById(list.getCourseId());
             list.setUser(user);
             list.setCourse(course);
-            reservationService.saveReservationList(list);
+            reservationService.saveList(list);
             return "redirect:/reservation-list?success";
         }
-        return "redirect:/create-reservation-list?error";
+        return "redirect:/create-list?error";
     }
-    // We can add more methods for creating, updating, or deleting reservations if needed
 }

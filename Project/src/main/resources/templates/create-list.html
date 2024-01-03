@@ -9,7 +9,10 @@
 <main class="flex-shrink-0">
     <section layout:fragment="body">
         <div class="container">
-            <form role="form" method="post" th:action="@{/create-reservation-list/save}" th:object="${list}">
+            <div th:if="${param.error}" class="alert alert-danger">
+                Something went wrong.
+            </div>
+            <form role="form" method="post" th:action="@{/create-list/save}" th:object="${list}">
 
                 <div class="form-group col-md-4">
                     <label for="courseSelect">Course</label>

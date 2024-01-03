@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void saveReservationList(ListDTO listDTO) {
+    public void saveList(ListDTO listDTO) {
         ListEntity list = new ListEntity();
         list.setUser(listDTO.getUser());
         list.setCourse(listDTO.getCourse());

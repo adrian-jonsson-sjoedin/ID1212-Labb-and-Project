@@ -3,50 +3,52 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
 <head>
-  <title>Register</title>
+    <title>Register</title>
 </head>
 <section layout:fragment="body">
 
-  <div class="main mx-3 my-3" >
-    <div class="col-md-6 col-sm-12">
-      <div th:if="${param.fail}" class="alert alert-danger">
-        Username or email already exists</div>
-      <div th:if="${param.unauthorized}" class="alert alert-danger">
-        User not authorized</div>
-      <div class="login-form">
-        <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
-          <div class="form-group">
-            <label>Username</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Username"
-                    th:field="*{username}">
-          </div>
-          <p th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></p>
+    <div class="main mx-3 my-3">
+        <div class="col-md-6 col-sm-12">
+            <div th:if="${param.fail}" class="alert alert-danger">
+                Username or email already exists
+            </div>
+            <div th:if="${param.unauthorized}" class="alert alert-danger">
+                User not authorized
+            </div>
+            <div class="login-form">
+                <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Username"
+                                th:field="*{username}">
+                    </div>
+                    <p th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}"></p>
 
-          <div class="form-group">
-            <label>Password</label>
-            <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Password"
-                    th:field="*{password}">
-          </div>
-          <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input
+                                type="password"
+                                class="form-control"
+                                placeholder="Password"
+                                th:field="*{password}">
+                    </div>
+                    <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>
 
-          <div class="form-group">
-            <label>Admin</label>
-              <input
-                      type="checkbox"
+                    <div class="form-group">
+                        <label>Admin</label>
+                        <input
+                                type="checkbox"
 
-                      th:field="*{admin}" />
-          </div>
-          <p th:if="${#fields.hasErrors('admin')}" class="text-danger"></p>
-          <button th:href="@{/register}" type="submit" class="btn btn-primary">Register</button>
-        </form>
-      </div>
+                                th:field="*{admin}"/>
+                    </div>
+                    <p th:if="${#fields.hasErrors('admin')}" class="text-danger"></p>
+                    <button th:href="@{/register}" type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 </html>
