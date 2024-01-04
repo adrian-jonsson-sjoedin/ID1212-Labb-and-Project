@@ -83,22 +83,23 @@ public class HomeController {
 
     @PostMapping("/course-access/save")
     public String saveStudentCourseAccess(
-                                          @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseIds,
-                                          BindingResult result,
-                                          Model model) {
+            @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseIds,
+            BindingResult result,
+            Model model) {
         List<Integer> ids = selectedCourseIds.getSelectedCourses();
         //DEBUGGING
         if (ids != null) {
             for (Integer id : ids) {
                 System.out.println("Selected course id is: " + id);
             }
-        }else{
+        } else {
             System.out.println("No courses selected");
         }
 
-          List<CourseEntity> selectedCourses = courseService.getCoursesFromIdList(ids);
-            UserEntity user = userService.findById(selectedCourseIds.getStudentId());
-
+        List<CourseEntity> selectedCourses = courseService.getCoursesFromIdList(ids);
+        UserEntity user = userService.findById(selectedCourseIds.getStudentId());
+        //Not working yet since student id is not passed along
+//        user.setCourses(selectedCourses);
         System.out.println(user.getUsername());
         return "redirect:/manage-students?success";
     }
