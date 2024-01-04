@@ -7,6 +7,7 @@ import se.kth.project.model.CourseEntity;
 import se.kth.project.repository.CourseRepository;
 import se.kth.project.service.CourseService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,12 +75,20 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseEntity findById(Integer id) {
         Optional<CourseEntity> courseEntityOptional = courseRepository.findById(id);
-        if(courseEntityOptional.isPresent()){
-            return courseEntityOptional.get();
+        return courseEntityOptional.orElse(null);
+    }
+
+    @Override
+    public List<CourseEntity> getCoursesFromIdList(List<Integer> courseIdList) {
+        List<CourseEntity> selectedCourses = new ArrayList<>();
+        for(Integer courseId : courseIdList){
+            // Use Optional to handle the possibility of a null result
+            Optional<CourseEntity> courseOptional = courseRepository.findById(courseId);
+
+            // Check if the course was found and present in the repository
+            courseOptional.ifPresent(selectedCourses::add);
         }
-        else {
-            return null;
-        }
+        return selectedCourses;
     }
 
     @Override

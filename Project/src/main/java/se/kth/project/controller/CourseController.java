@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.CourseDTO;
-import se.kth.project.dto.UserDTO;
 import se.kth.project.model.CourseEntity;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
@@ -74,15 +73,5 @@ public class CourseController {
             return "redirect:/home?unauthorized";
         }
     }
-    @GetMapping("/course-access")
-    public String setStudentCourseAccessForm(Model model){
-        if(SecurityUtil.isUserAdmin()){
-            List<UserDTO> students = userService.retrieveAllStudents();
-            model.addAttribute("students", students);
-            return "course-access";
-        }
-        else {
-            return "redirect:/home?unauthorized";
-        }
-    }
+
 }

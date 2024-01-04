@@ -11,4 +11,8 @@ public interface UserService {
     UserDTO retrieveUser(String username, String password);
     int saveUser(RegistrationDTO registrationDTO);
     UserEntity findByUsername(String username);
+
+    void delete(Integer studentId);
+
+    UserEntity findById(Integer studentId);
 }

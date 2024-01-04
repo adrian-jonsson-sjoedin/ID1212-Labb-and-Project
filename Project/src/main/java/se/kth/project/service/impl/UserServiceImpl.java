@@ -105,4 +105,15 @@ public class UserServiceImpl implements UserService {
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    @Override
+    public void delete(Integer studentId) {
+        userRepository.deleteById(studentId);
+    }
+
+    @Override
+    public UserEntity findById(Integer studentId) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(studentId);
+        return userEntityOptional.orElse(null);
+    }
 }

@@ -12,4 +12,5 @@ public interface CourseService {
 
     void delete(Integer courseId);
     CourseEntity findById(Integer id);
+    List<CourseEntity> getCoursesFromIdList(List<Integer> courseIdList);
 }
