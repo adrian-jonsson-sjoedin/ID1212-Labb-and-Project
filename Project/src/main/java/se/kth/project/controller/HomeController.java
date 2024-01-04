@@ -65,14 +65,16 @@ public class HomeController {
     @GetMapping("/manage-students/{studentId}/setCourseAccess")
     public String setStudentCourseAccessForm(@PathVariable("studentId") Integer studentId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
-            UserEntity user = userService.findById(studentId);
-            model.addAttribute("user", user);
+//            UserEntity user = userService.findById(studentId);
+//            model.addAttribute("user", user);
 
             List<CourseDTO> courses = courseService.getAllCourses();
             for (int i = 0; i <= courses.size(); i++) {
             }
             model.addAttribute("courses", courses);
-            model.addAttribute("selectedCourses", new SelectedCourseForm()); // Initialize an object to hold selected courses
+            SelectedCourseForm selectedCourse = new SelectedCourseForm();
+            selectedCourse.setStudentId(studentId);
+            model.addAttribute("selectedCourses", selectedCourse); // Initialize an object to hold selected courses
             return "course-access";
         } else {
             return "redirect:/home?unauthorized";
@@ -80,7 +82,7 @@ public class HomeController {
     }
 
     @PostMapping("/course-access/save")
-    public String saveStudentCourseAccess(@ModelAttribute("user") UserEntity user,
+    public String saveStudentCourseAccess(
                                           @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseIds,
                                           BindingResult result,
                                           Model model) {
@@ -95,6 +97,9 @@ public class HomeController {
         }
 
           List<CourseEntity> selectedCourses = courseService.getCoursesFromIdList(ids);
+            UserEntity user = userService.findById(selectedCourseIds.getStudentId());
+
+        System.out.println(user.getUsername());
         return "redirect:/manage-students?success";
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public class SelectedCourseForm {
 
     private List<Integer> selectedCourses;
+    private Integer studentId;
 
 
 
