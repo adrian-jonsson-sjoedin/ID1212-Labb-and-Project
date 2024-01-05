@@ -55,6 +55,11 @@ public class UserServiceImpl implements UserService {
         return -1;
     }
 
+    @Override
+    public void updateUser(UserEntity user) {
+        userRepository.save(user);
+    }
+
     /**
      * Retrieves the user with matching username and password from the db.
      *

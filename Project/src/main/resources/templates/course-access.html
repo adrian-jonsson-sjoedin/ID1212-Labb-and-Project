@@ -8,17 +8,52 @@
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body">
-        <form th:action="@{/course-access/save}" th:object="${selectedCourses}" method="post">
-            <div th:each="course : ${courses}">
-                <label th:for="${'course_' + course.courseId}">
-                    <input type="checkbox" th:id="${'course_' + course.courseId}" th:name="selectedCourses" th:value="${course.courseId}" />
-                    <span th:text="${course.title}"></span>
-                </label>
-                <br/>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Course Access</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${user.courses != null and not #lists.isEmpty(user.courses)}">
+                    <td th:text="${user.username}"></td>
+                    <td>
+                        <span th:each="course : ${user.courses}">
+                        <span th:text="${course.title}"></span><br/>
+                        </span>
+                    </td>
+                    <!-- Additional cells for courses if needed -->
+                </tr>
+                <tr th:if="${user.courses == null or #lists.isEmpty(user.courses)}">
+                    <td th:text="${user.username}"></td>
+                    <td>No course access set</td>
+                    <!-- Additional cells for courses if needed -->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <form th:action="@{/course-access/save}" th:object="${selectedCourseForm}" method="post">
+                <div th:each="course : ${courses}">
+                    <!-- Add a hidden input for studentId -->
+                    <input type="hidden" th:field="*{studentId}" th:value="${user.id}" />
 
+                    <label th:for="${'course_' + course.courseId}">
+                        <input type="checkbox"
+                               th:id="${'course_' + course.courseId}"
+
+                               th:field="*{selectedCourses}"
+                               th:value="${course.courseId}"/>
+                        <span th:text="${course.title}"></span>
+                    </label>
+                    <br/>
+                </div>
+                <p th:if="${#fields.hasErrors('selectedCourses')}" class="text-danger" th:errors="*{selectedCourses}"></p>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </section>
 </main>
 </body>

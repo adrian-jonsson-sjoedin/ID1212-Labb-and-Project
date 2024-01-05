@@ -15,4 +15,6 @@ public interface UserService {
     void delete(Integer studentId);
 
     UserEntity findById(Integer studentId);
+
+    void updateUser(UserEntity user);
 }

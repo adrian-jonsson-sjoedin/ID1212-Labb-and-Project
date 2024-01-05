@@ -1,6 +1,7 @@
 package se.kth.project.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,16 +66,15 @@ public class HomeController {
     @GetMapping("/manage-students/{studentId}/setCourseAccess")
     public String setStudentCourseAccessForm(@PathVariable("studentId") Integer studentId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
-//            UserEntity user = userService.findById(studentId);
-//            model.addAttribute("user", user);
+            UserEntity user = userService.findById(studentId);
+            model.addAttribute("user", user);
 
             List<CourseDTO> courses = courseService.getAllCourses();
-            for (int i = 0; i <= courses.size(); i++) {
-            }
+
             model.addAttribute("courses", courses);
             SelectedCourseForm selectedCourse = new SelectedCourseForm();
             selectedCourse.setStudentId(studentId);
-            model.addAttribute("selectedCourses", selectedCourse); // Initialize an object to hold selected courses
+            model.addAttribute("selectedCourseForm", selectedCourse); // Initialize an object to hold selected courses
             return "course-access";
         } else {
             return "redirect:/home?unauthorized";
@@ -82,25 +82,31 @@ public class HomeController {
     }
 
     @PostMapping("/course-access/save")
-    public String saveStudentCourseAccess(
-            @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseIds,
+    public String saveStudentCourseAccess(@Valid @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseForm,
             BindingResult result,
             Model model) {
-        List<Integer> ids = selectedCourseIds.getSelectedCourses();
+        List<Integer> ids = selectedCourseForm.getSelectedCourses();
         //DEBUGGING
-        if (ids != null) {
-            for (Integer id : ids) {
-                System.out.println("Selected course id is: " + id);
-            }
-        } else {
-            System.out.println("No courses selected");
+//        if (ids != null) {
+//            for (Integer id : ids) {
+//                System.out.println("Selected course id is: " + id);
+//            }
+//        } else {
+//            System.out.println("No courses selected");
+//        }
+        if(result.hasErrors()){
+            model.addAttribute("user", userService.findById(selectedCourseForm.getStudentId()));
+            model.addAttribute("courses", courseService.getAllCourses());
+            SelectedCourseForm selectedCourse = new SelectedCourseForm();
+            selectedCourse.setStudentId(selectedCourseForm.getStudentId());
+            model.addAttribute("selectedCourseForm", selectedCourse);
+            return "course-access";
         }
-
+        Integer studentId = selectedCourseForm.getStudentId();
         List<CourseEntity> selectedCourses = courseService.getCoursesFromIdList(ids);
-        UserEntity user = userService.findById(selectedCourseIds.getStudentId());
-        //Not working yet since student id is not passed along
-//        user.setCourses(selectedCourses);
-        System.out.println(user.getUsername());
+        UserEntity user = userService.findById(studentId);
+        user.setCourses(selectedCourses);
+        userService.updateUser(user);
         return "redirect:/manage-students?success";
     }
 }
