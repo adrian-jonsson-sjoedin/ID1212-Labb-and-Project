@@ -50,10 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-    @Override
-    public void deleteReservation(int reservationId) {
-        reservationRepository.deleteById(reservationId);
-    }
+
 
     @Override
     public void saveList(ListDTO listDTO) {
@@ -74,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void removeBooking(int bookingId) {
-        reservationRepository.deleteById(bookingId);
+    public void deleteReservation(int reservationId) {
+        reservationRepository.deleteById(reservationId);
     }
 }

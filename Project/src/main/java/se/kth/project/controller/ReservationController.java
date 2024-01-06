@@ -52,8 +52,8 @@ public class ReservationController {
     }
 
     @PostMapping("/create-reservation")
-    public String createReservation(@ModelAttribute ReservationEntity reservation, Model model) {
-        reservationService.createReservation(reservation);
+    public String createReservation(@ModelAttribute ("list") ListDTO list, ReservationEntity reservation, Model model){
+        reservationService.saveList(list);
         return "redirect:/reservation-list";
     }
 
@@ -93,9 +93,9 @@ public class ReservationController {
         return "redirect:/create-list?error";
     }
 
-    @GetMapping("/remove-booking/{bookingId}")
-    public String removeBooking(@PathVariable int bookingId, Model model) {
-        reservationService.removeBooking(bookingId);
+    @GetMapping("/remove-booking/{reservationId}")
+    public String deleteReservation(@PathVariable int reservationId, Model model) {
+        reservationService.deleteReservation(reservationId);
         System.out.println("Booking removed");
         List<ReservationEntity> updatedList = reservationService.getAllReservations();
         model.addAttribute("reservationLists", updatedList );
