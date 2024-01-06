@@ -46,17 +46,6 @@ public class ReservationController {
     }
 
 
-    @GetMapping("/create-reservation")
-    public String showCreateReservationForm(@ModelAttribute ReservationEntity reservation, Model model) {
-        return "create-reservation";
-    }
-
-    @PostMapping("/create-reservation")
-    public String createReservation(@ModelAttribute ("list") ListDTO list, ReservationEntity reservation, Model model){
-        reservationService.saveList(list);
-        return "redirect:/reservation-list";
-    }
-
 
 
     @GetMapping("/create-list")
@@ -93,7 +82,7 @@ public class ReservationController {
         return "redirect:/create-list?error";
     }
 
-    @GetMapping("/remove-booking/{reservationId}")
+    @GetMapping("/deleteReservation/{reservationId}")
     public String deleteReservation(@PathVariable int reservationId, Model model) {
         reservationService.deleteReservation(reservationId);
         System.out.println("Booking removed");
@@ -103,7 +92,16 @@ public class ReservationController {
         return "redirect:/reservation-list";
     }
 
-
+    @GetMapping("/book/{listId}")
+    public String bookReservation(@PathVariable int listId, Model model) {
+        String username = SecurityUtil.getSessionUser();
+        if (username != null) {
+            UserEntity user = userService.findByUsername(username);
+            reservationService.bookReservation(listId, user);
+            return "redirect:/my-bookings";
+        }
+        return "redirect:/login";
+    }
 
     @GetMapping("/my-bookings")
     public String showMyBookings(Model model) {
@@ -120,5 +118,11 @@ public class ReservationController {
         }
         return "redirect:/login";
     }
+
+
+
+
+
+
 
 }
