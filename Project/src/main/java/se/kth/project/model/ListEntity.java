@@ -28,6 +28,9 @@ public class ListEntity {
     private UserEntity user;
 
     @Column(nullable = false)
+    private String list;
+
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
