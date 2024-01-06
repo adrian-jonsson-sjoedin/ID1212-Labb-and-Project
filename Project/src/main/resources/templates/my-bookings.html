@@ -1,0 +1,31 @@
+<!-- my-bookings.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Bookings</title>
+</head>
+<body>
+
+<h2>My Bookings</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${userBookings}">
+
+        <td th:text="${booking.id}"></td>
+        <td th:text="${booking.description}"></td>
+
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

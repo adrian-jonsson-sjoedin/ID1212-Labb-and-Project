@@ -51,11 +51,13 @@ public class SecurityConfig {
      * @return The configured SecurityFilterChain.
      * @throws Exception If an error occurs during configuration.
      */
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(Customizer.withDefaults())
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/my-bookings").hasRole("USER") // Add this line for the new rule
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -70,6 +72,7 @@ public class SecurityConfig {
                         .permitAll());
         return http.build();
     }
+
 
     /**
      * Configures the AuthenticationManagerBuilder with the custom user details service and password encoder.

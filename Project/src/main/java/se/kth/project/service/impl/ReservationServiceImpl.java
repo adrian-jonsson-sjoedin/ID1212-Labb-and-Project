@@ -17,7 +17,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ListRepository listRepository;
 
-
     @Autowired
     public ReservationServiceImpl(ReservationRepository reservationRepository, ListRepository listRepository) {
         this.reservationRepository = reservationRepository;
@@ -27,6 +26,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationEntity> getAllReservations() {
         return reservationRepository.findAll();
+    }
+
+    @Override
+    public List<ListEntity> getAllLists() {
+        return listRepository.findAll();
     }
 
     @Override
@@ -62,5 +66,15 @@ public class ReservationServiceImpl implements ReservationService {
         list.setIntervall(listDTO.getIntervall());
         list.setMaxSlots(listDTO.getMaxSlots());
         listRepository.save(list);
+    }
+
+    @Override
+    public List<ReservationEntity> getReservationsByUserId(int userId) {
+        return reservationRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void removeBooking(int bookingId) {
+        reservationRepository.deleteById(bookingId);
     }
 }

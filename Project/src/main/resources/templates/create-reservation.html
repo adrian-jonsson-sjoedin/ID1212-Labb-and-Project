@@ -1,0 +1,42 @@
+<!-- create-reservation.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+    <title>Create Reservation</title>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+<!-- Page content-->
+<section layout:fragment="body" class="py-5">
+    <div class="container">
+        <div class="text-center mt-5">
+            <h2>Create Reservation</h2>
+
+
+            <form th:action="@{/create-reservation}" method="post">
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="startTime">Start time:</label>
+                    <input type="datetime-local" id="startTime" name="start" required>
+                </div>
+
+                <button type="submit">Create Reservation</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

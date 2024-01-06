@@ -7,10 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.CourseDTO;
 import se.kth.project.dto.ListDTO;
 import se.kth.project.model.CourseEntity;
+import se.kth.project.model.ListEntity;
 import se.kth.project.model.ReservationEntity;
 import se.kth.project.model.UserEntity;
 import se.kth.project.security.SecurityUtil;
@@ -38,10 +40,24 @@ public class ReservationController {
 
     @GetMapping("/reservation-list")
     public String displayReservations(Model model) {
-        List<ReservationEntity> reservations = reservationService.getAllReservations();
-        model.addAttribute("reservations", reservations);
+        List<ListEntity> reservationLists = reservationService.getAllLists();
+        model.addAttribute("reservationLists", reservationLists);
         return "reservation-list";
     }
+
+
+    @GetMapping("/create-reservation")
+    public String showCreateReservationForm(@ModelAttribute ReservationEntity reservation, Model model) {
+        return "create-reservation";
+    }
+
+    @PostMapping("/create-reservation")
+    public String createReservation(@ModelAttribute ReservationEntity reservation, Model model) {
+        reservationService.createReservation(reservation);
+        return "redirect:/reservation-list";
+    }
+
+
 
     @GetMapping("/create-list")
     public String createReservationList(Model model) {
@@ -76,4 +92,33 @@ public class ReservationController {
         }
         return "redirect:/create-list?error";
     }
+
+    @GetMapping("/remove-booking/{bookingId}")
+    public String removeBooking(@PathVariable int bookingId, Model model) {
+        reservationService.removeBooking(bookingId);
+        System.out.println("Booking removed");
+        List<ReservationEntity> updatedList = reservationService.getAllReservations();
+        model.addAttribute("reservationLists", updatedList );
+
+        return "redirect:/reservation-list";
+    }
+
+
+
+    @GetMapping("/my-bookings")
+    public String showMyBookings(Model model) {
+        String username = SecurityUtil.getSessionUser();
+        if (username != null) {
+            UserEntity user = userService.findByUsername(username);
+            List<ReservationEntity> userBookings = reservationService.getReservationsByUserId(user.getId());
+
+            // Log userBookings for debugging
+            System.out.println("User Bookings: " + userBookings);
+
+            model.addAttribute("userBookings", userBookings);
+            return "my-bookings";
+        }
+        return "redirect:/login";
+    }
+
 }

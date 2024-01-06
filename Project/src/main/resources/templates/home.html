@@ -1,6 +1,6 @@
-<html xmlns:th="http://thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<!-- home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
     <title th:text="'Home - ' + ${#authentication.authorities}"></title>
@@ -11,19 +11,25 @@
 <section layout:fragment="body" class="py-5">
     <div class="container">
         <div th:if="${param.unauthorized}" class="alert alert-danger">
-           You don't have access to the requested page.
+            You don't have access to the requested page.
         </div>
         <div class="text-center mt-5">
             <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
-            <p class="lead">This will be the admin home page</p>
-        <!-- Conditionally render the register new user button based on what role is saved in userRole-->
+            <p class="lead"> Home page </p>
+
+            <!-- Conditionally render the Create Reservation button for authenticated users -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link btn btn-primary my-1" th:href="@{/create-reservation}">Create Reservation</a>
+            </div>
+
+            <!-- Conditionally render the admin-specific buttons based on what role is saved in userRole -->
             <div th:if="${#strings.equals(session.userRole, 'admin')}">
                 <a class="nav-link btn btn-primary my-1" th:href="@{/register}">Add new Admin/Student</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/create-course}">See courses/Create new course</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/create-list}">Create new list for reservations</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/manage-students}">Manage students</a>
-
             </div>
+
             <a class="nav-link btn btn-primary my-1" th:href="@{/reservation-list}">See reservation lists</a>
         </div>
     </div>
