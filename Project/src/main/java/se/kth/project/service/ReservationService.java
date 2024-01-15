@@ -18,6 +18,7 @@ public interface ReservationService {
 
     void deleteReservation(int reservationId);
 
+    void removeBooking(int bookingId);
 
     void saveList(ListDTO list);
 
