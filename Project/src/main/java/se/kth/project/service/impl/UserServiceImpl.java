@@ -1,5 +1,6 @@
 package se.kth.project.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -112,7 +113,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer studentId) {
+        userRepository.deleteCourseAccessByUserId(studentId);
         userRepository.deleteById(studentId);
     }
 

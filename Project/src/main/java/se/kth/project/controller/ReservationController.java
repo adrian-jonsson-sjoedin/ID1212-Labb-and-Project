@@ -47,7 +47,6 @@ public class ReservationController {
 
 
 
-
     @GetMapping("/create-list")
     public String createReservationList(Model model) {
         if (SecurityUtil.isUserAdmin()) {
