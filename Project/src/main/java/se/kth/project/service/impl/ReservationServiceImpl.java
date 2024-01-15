@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import se.kth.project.dto.ListDTO;
 import se.kth.project.model.ListEntity;
 import se.kth.project.model.ReservationEntity;
-import se.kth.project.model.UserEntity;
 import se.kth.project.repository.ListRepository;
 import se.kth.project.repository.ReservationRepository;
 import se.kth.project.service.ReservationService;
@@ -51,6 +50,8 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+
+
     @Override
     public void saveList(ListDTO listDTO) {
         ListEntity list = new ListEntity();
@@ -73,21 +74,4 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteReservation(int reservationId) {
         reservationRepository.deleteById(reservationId);
     }
-
-
-    @Override
-    public void bookReservation(int listId, UserEntity user) {
-        ListEntity reservationList = listRepository.findById(listId).orElseThrow();
-
-
-        ReservationEntity reservation = new ReservationEntity();
-        reservation.setUser(user);
-        reservation.setList(reservationList);
-        reservation.setDescription(reservationList.getDescription());
-        reservation.setLocation(reservationList.getLocation());
-        reservation.setStart(reservationList.getStart());
-
-        reservationRepository.save(reservation);
-    }
-
 }

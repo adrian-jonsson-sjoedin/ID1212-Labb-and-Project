@@ -9,6 +9,5 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
      List<ReservationEntity> findByUserId(int userId);
 
-
      void deleteById(int id);
 }

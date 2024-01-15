@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,14 +28,7 @@ public class ReservationEntity {
     @ManyToOne // vem är (eventuell) medarbetare (också student)
     @JoinColumn(name = "coop_id", nullable = true)
     private UserEntity coopId; // second user id fk
-    @Column(nullable = false)
-    private String description;
 
-    @Column(nullable = false)
-    private String location;
-
-    // tidsintervallet mellan varje redovisning i minuter
-    private LocalDateTime start;
     // sequence börjar med 0 -> max_slots, första bokning
     // är starttid, nästa är starttid + interval (från lists)
     @Column(nullable = false)

@@ -17,6 +17,7 @@
                     <th>Description</th>
                     <th>Location</th>
                     <th>Start Time</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,11 +28,8 @@
                     <td th:text="${list.location}"></td>
                     <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
                     <td>
-                        <a th:href="@{/deleteReservation/{reservationId}(reservationId=${list.id})}"
+                        <a th:href="@{/remove-booking/{bookingId}(bookingId=${list.id})}"
                            onclick="return confirm('Are you sure you want to delete this booking?')">Delete</a>
-
-                    <td>
-                        <a th:href="@{/book/{listId}(listId=${list.id})}">Book</a>
                     </td>
                 </tr>
                 </tbody>

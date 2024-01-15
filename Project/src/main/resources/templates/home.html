@@ -17,6 +17,10 @@
             <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
             <p class="lead"> Home page </p>
 
+            <!-- Conditionally render the Create Reservation button for authenticated users -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link btn btn-primary my-1" th:href="@{/create-reservation}">Create Reservation</a>
+            </div>
 
             <!-- Conditionally render the admin-specific buttons based on what role is saved in userRole -->
             <div th:if="${#strings.equals(session.userRole, 'admin')}">

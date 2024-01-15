@@ -1,42 +1,31 @@
 <!-- my-bookings.html -->
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Bookings</title>
 </head>
-<body class="d-flex flex-column h-100">
+<body>
 
-<!-- Page content -->
-<section layout:fragment="body" class="py-5">
-    <div class="container">
-        <div class="text-center mt-5">
-            <h2>My Bookings</h2>
+<h2>My Bookings</h2>
 
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Description</th>
-                    <th>Location</th>
-                    <th>Start Time</th>
-                    <!-- Add more columns as needed -->
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="booking : ${userBookings}">
-                    <td th:text="${booking.id}"></td>
-                    <td th:text="${booking.description}"></td>
-                    <td th:text="${booking.location}"></td>
-                    <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
 
-                    <!-- Add more columns as needed -->
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${userBookings}">
+
+        <td th:text="${booking.id}"></td>
+        <td th:text="${booking.description}"></td>
+
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>
