@@ -32,4 +32,5 @@ public class ListDTO {
 
     @Positive(message = "Specify the maximum allowed number of bookings for this reservation.")
     private int maxSlots;
+
 }

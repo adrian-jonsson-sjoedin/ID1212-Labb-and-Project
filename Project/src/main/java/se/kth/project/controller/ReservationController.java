@@ -81,14 +81,15 @@ public class ReservationController {
         return "redirect:/create-list?error";
     }
 
-    @GetMapping("/deleteReservation/{reservationId}")
-    public String deleteReservation(@PathVariable int reservationId, Model model) {
-        reservationService.deleteReservation(reservationId);
-        System.out.println("Booking removed");
-        List<ReservationEntity> updatedList = reservationService.getAllReservations();
-        model.addAttribute("reservationLists", updatedList );
-
-        return "redirect:/reservation-list";
+    @GetMapping("/reservation-list/{listId}/delete")
+    public String deleteReservation(@PathVariable int listId, Model model) {
+        if(SecurityUtil.isUserAdmin()) {
+            reservationService.deleteReservationList(listId);
+            System.out.println("Booking removed");
+            return "redirect:/reservation-list";
+        }else{
+            return "redirect:/home?unauthorized";
+        }
     }
 
     @GetMapping("/book/{listId}")

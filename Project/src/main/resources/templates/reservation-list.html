@@ -1,7 +1,10 @@
 <!-- reservation-list.html -->
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
 <head>
     <title>Reservation List</title>
 </head>
@@ -13,25 +16,42 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th th:if="${#strings.equals(session.userRole, 'admin')}">ID</th>
                     <th>Description</th>
                     <th>Location</th>
                     <th>Start Time</th>
+                    <th>Time per slot (min)</th>
+                    <th>Total slots</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="list : ${reservationLists}">
 
-                    <td th:text="${list.id}"></td>
+                    <td th:if="${#strings.equals(session.userRole, 'admin')}" th:text="${list.id}"></td>
                     <td th:text="${list.description}"></td>
                     <td th:text="${list.location}"></td>
                     <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td>
-                        <a th:href="@{/deleteReservation/{reservationId}(reservationId=${list.id})}"
-                           onclick="return confirm('Are you sure you want to delete this booking?')">Delete</a>
+                    <td th:text="${list.intervall}"></td>
+                    <td th:text="${list.maxSlots}"></td>
 
-                    <td>
-                        <a th:href="@{/book/{listId}(listId=${list.id})}">Book</a>
+                    <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
+                        <a class="btn btn-danger"
+                           th:href="@{/reservation-list/{listId}/delete(listId=${list.id})}"
+                           onclick="return confirm('Are you sure you want to delete this booking?')">
+                            Delete
+                        </a>
+                    </td>
+                    <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
+                        <a class="btn btn-secondary"
+                           th:href="@{/book/{listId}(listId=${list.id})}">
+                            Book
+                        </a>
+                    </td>
+                    <td th:if="${#strings.equals(session.userRole, 'student')}" class="text-end">
+                        <a class="btn btn-secondary"
+                           th:href="@{/book/{listId}(listId=${list.id})}">
+                            Book
+                        </a>
                     </td>
                 </tr>
                 </tbody>

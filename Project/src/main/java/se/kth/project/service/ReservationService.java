@@ -17,7 +17,7 @@ public interface ReservationService {
 
     void updateReservation(ReservationEntity reservation);
 
-    void deleteReservation(int reservationId);
+    void deleteReservationList(int listId);
 
     void bookReservation(int listId, UserEntity user);
 

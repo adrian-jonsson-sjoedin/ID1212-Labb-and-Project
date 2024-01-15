@@ -70,8 +70,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void deleteReservation(int reservationId) {
-        reservationRepository.deleteById(reservationId);
+    public void deleteReservationList(int listId) {
+        listRepository.deleteById(listId);
     }
 
 
