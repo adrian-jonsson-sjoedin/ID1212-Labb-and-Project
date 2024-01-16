@@ -1,4 +1,4 @@
-The project is created in Intellij ultimate and uses a local MySQL 8 database which needs to be set up. 
+The project is a springboot project developed in Intellij ultimate and uses a local MySQL 8 database which needs to be set up. 
 Simply create a local database and then make a copy of the application-template.properties file, name it application.properties and follow the instructions from the template.
 
 Then before running the project insert a user with admin acces in the user table. 
