@@ -3,6 +3,7 @@ package se.kth.project.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.ListDTO;
+import se.kth.project.model.Booking;
 import se.kth.project.model.ListEntity;
 import se.kth.project.model.ReservationEntity;
 import se.kth.project.model.UserEntity;
@@ -89,5 +90,33 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.save(reservation);
     }
+
+    @Override
+    public Booking createBookingObject(Integer listId, Integer studentId) {
+        //retrieve the reservation list in question
+        ListEntity list = listRepository.findById(listId).orElseThrow();
+        //retrieve all reservations for the same list
+        List<ReservationEntity> reservations = reservationRepository.findAllByListId(listId);
+        int[] sequences = new int[list.getMaxSlots()];
+        //see which slots the reservation have booked
+        if (reservations != null) {
+            int i = 0;
+            for (ReservationEntity reservation : reservations) {
+                sequences[i] = reservation.getSequence();
+                i++;
+            }
+        }
+        Booking booking = new Booking(listId,
+                studentId,
+                list.getMaxSlots(),
+                list.getStart(),
+                list.getIntervall(),
+                sequences,
+                list.getLocation(),
+                list.getDescription());
+        int maxSlotsForReservation = listRepository.findMaxSlotsById(listId);
+        return booking;
+    }
+
 
 }

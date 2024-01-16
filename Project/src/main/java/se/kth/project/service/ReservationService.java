@@ -1,6 +1,7 @@
 package se.kth.project.service;
 
 import se.kth.project.dto.ListDTO;
+import se.kth.project.model.Booking;
 import se.kth.project.model.ListEntity;
 import se.kth.project.model.ReservationEntity;
 import se.kth.project.model.UserEntity;
@@ -24,4 +25,6 @@ public interface ReservationService {
     void saveList(ListDTO list);
 
     List<ReservationEntity> getReservationsByUserId(int userId);
+
+    Booking createBookingObject(Integer listId, Integer studentId);
 }

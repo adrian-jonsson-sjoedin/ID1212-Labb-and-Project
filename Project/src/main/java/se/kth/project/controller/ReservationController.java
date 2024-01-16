@@ -92,8 +92,13 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/book/{listId}")
-    public String bookReservation(@PathVariable int listId, Model model) {
+    @GetMapping("/reservation-list/{listId}/book")
+    public String bookReservationForm(@PathVariable("listId") Integer listId, Model model) {
+        if (SecurityUtil.isUserAdmin()){
+            //get all students that have course access to the course with the corresponding course id
+            //send in the booking object so that we can list times and slots that are bookable
+
+        }
         String username = SecurityUtil.getSessionUser();
         if (username != null) {
             UserEntity user = userService.findByUsername(username);

@@ -43,7 +43,7 @@
                     </td>
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-secondary"
-                           th:href="@{/book/{listId}(listId=${list.id})}">
+                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
                             Book
                         </a>
                     </td>

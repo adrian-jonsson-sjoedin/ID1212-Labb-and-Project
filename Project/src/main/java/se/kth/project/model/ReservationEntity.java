@@ -30,6 +30,7 @@ public class ReservationEntity {
     @ManyToOne // vem är (eventuell) medarbetare (också student)
     @JoinColumn(name = "coop_id", nullable = true)
     private UserEntity coopId; // second user id fk
+
     @Column(nullable = false)
     private String description;
 
