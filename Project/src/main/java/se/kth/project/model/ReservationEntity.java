@@ -40,6 +40,7 @@ public class ReservationEntity {
     private LocalDateTime start;
     // sequence börjar med 0 -> max_slots, första bokning
     // är starttid, nästa är starttid + interval (från lists)
+    //dvs sequence säger vilken slot som är bokad
     @Column(nullable = false)
     private int sequence;
 }
