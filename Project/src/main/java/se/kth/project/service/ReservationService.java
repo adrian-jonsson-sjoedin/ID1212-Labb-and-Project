@@ -26,5 +26,5 @@ public interface ReservationService {
 
     List<ReservationEntity> getReservationsByUserId(int userId);
 
-    Booking createBookingObject(Integer listId, Integer studentId);
+    Booking createBookingObject(Integer listId);
 }

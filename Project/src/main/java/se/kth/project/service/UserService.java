@@ -17,4 +17,6 @@ public interface UserService {
     UserEntity findById(Integer studentId);
 
     void updateUser(UserEntity user);
+
+    List<UserDTO> retrieveAllStudentsForCourseByListId(Integer listId);
 }

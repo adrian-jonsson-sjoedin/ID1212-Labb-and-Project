@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import se.kth.project.dto.CourseDTO;
 import se.kth.project.dto.ListDTO;
-import se.kth.project.model.CourseEntity;
-import se.kth.project.model.ListEntity;
-import se.kth.project.model.ReservationEntity;
-import se.kth.project.model.UserEntity;
+import se.kth.project.dto.UserDTO;
+import se.kth.project.model.*;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
 import se.kth.project.service.ReservationService;
 import se.kth.project.service.UserService;
+import se.kth.project.util.CalculateFreeSlotsAndTime;
 
 import java.util.List;
 
@@ -42,9 +41,13 @@ public class ReservationController {
     public String displayReservations(Model model) {
         List<ListEntity> reservationLists = reservationService.getAllLists();
         model.addAttribute("reservationLists", reservationLists);
+        int[] nummbeOfAvailableSlots = new int[reservationLists.size()];
+        int i = 0;
+        for(ListEntity list : reservationLists){
+            nummbeOfAvailableSlots[i] = CalculateFreeSlotsAndTime.getAvailableTimeSlots(list.getStart(), list.getIntervall(), list.getS)
+        }
         return "reservation-list";
     }
-
 
 
     @GetMapping("/create-list")
@@ -83,29 +86,40 @@ public class ReservationController {
 
     @GetMapping("/reservation-list/{listId}/delete")
     public String deleteReservation(@PathVariable int listId, Model model) {
-        if(SecurityUtil.isUserAdmin()) {
+        if (SecurityUtil.isUserAdmin()) {
             reservationService.deleteReservationList(listId);
             System.out.println("Booking removed");
             return "redirect:/reservation-list";
-        }else{
+        } else {
             return "redirect:/home?unauthorized";
         }
     }
 
     @GetMapping("/reservation-list/{listId}/book")
     public String bookReservationForm(@PathVariable("listId") Integer listId, Model model) {
-        if (SecurityUtil.isUserAdmin()){
+        if (SecurityUtil.isUserAdmin()) {
             //get all students that have course access to the course with the corresponding course id
+            List<UserDTO> students = userService.retrieveAllStudentsForCourseByListId(listId);
+            model.addAttribute("students", students);
             //send in the booking object so that we can list times and slots that are bookable
-
+            Booking booking = reservationService.createBookingObject(listId);
+            model.addAttribute("booking", booking);
+return "book";
         }
-        String username = SecurityUtil.getSessionUser();
-        if (username != null) {
-            UserEntity user = userService.findByUsername(username);
-            reservationService.bookReservation(listId, user);
-            return "redirect:/my-bookings";
-        }
+//        String username = SecurityUtil.getSessionUser();
+//        if (username != null) {
+//            UserEntity user = userService.findByUsername(username);
+//            reservationService.bookReservation(listId, user);
+//            return "book";
+//        }
         return "redirect:/login";
+    }
+
+    @PostMapping("/book/save")
+    public String saveStudentReservation(@ModelAttribute("booking") Booking booking,
+                                         BindingResult result,
+                                         Model model) {
+        return "redirect:/reservation-list?success";
     }
 
     @GetMapping("/my-bookings")
@@ -119,15 +133,10 @@ public class ReservationController {
             System.out.println("User Bookings: " + userBookings);
 
             model.addAttribute("userBookings", userBookings);
-            return "my-bookings";
+            return "book";
         }
         return "redirect:/login";
     }
-
-
-
-
-
 
 
 }

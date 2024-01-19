@@ -17,17 +17,21 @@
                 <thead>
                 <tr>
                     <th th:if="${#strings.equals(session.userRole, 'admin')}">ID</th>
+                    <th>Course</th>
                     <th>Description</th>
                     <th>Location</th>
                     <th>Start Time</th>
                     <th>Time per slot (min)</th>
                     <th>Total slots</th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="list : ${reservationLists}">
 
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" th:text="${list.id}"></td>
+                    <td th:text="${list.course.getTitle()}"></td>
                     <td th:text="${list.description}"></td>
                     <td th:text="${list.location}"></td>
                     <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
@@ -41,18 +45,18 @@
                             Delete
                         </a>
                     </td>
-                    <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
+                    <td class="text-end">
                         <a class="btn btn-secondary"
                            th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
                             Book
                         </a>
                     </td>
-                    <td th:if="${#strings.equals(session.userRole, 'student')}" class="text-end">
-                        <a class="btn btn-secondary"
-                           th:href="@{/book/{listId}(listId=${list.id})}">
-                            Book
-                        </a>
-                    </td>
+<!--                    <td th:if="${#strings.equals(session.userRole, 'student')}" class="text-end">-->
+<!--                        <a class="btn btn-secondary"-->
+<!--                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">-->
+<!--                            Book-->
+<!--                        </a>-->
+<!--                    </td>-->
                 </tr>
                 </tbody>
 

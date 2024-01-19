@@ -1,12 +1,15 @@
 package se.kth.project.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.RegistrationDTO;
 import se.kth.project.dto.UserDTO;
+import se.kth.project.model.ListEntity;
 import se.kth.project.model.UserEntity;
+import se.kth.project.repository.ListRepository;
 import se.kth.project.repository.UserRepository;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.UserService;
@@ -18,7 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final ListRepository listRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Constructs a new instance of the {@code UserServiceImpl} class.
@@ -27,8 +31,11 @@ public class UserServiceImpl implements UserService {
      * @param passwordEncoder The password encoder for securing user passwords.
      */
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           ListRepository listRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.listRepository = listRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -96,7 +103,30 @@ public class UserServiceImpl implements UserService {
                 .userId(user.getId())
                 .username(user.getUsername())
                 .admin(user.isAdmin())
+                .courses(user.getCourses())
                 .build();
+    }
+
+    @Override
+    public List<UserDTO> retrieveAllStudentsForCourseByListId(Integer listId) {
+        List<UserEntity> allStudents = userRepository.findAllByAdminIsFalse();
+        ListEntity list = listRepository.findById(listId).orElseThrow(() -> new EntityNotFoundException("List not found"));
+        Integer courseId = list.getCourse().getId();
+        return allStudents.stream()
+                .filter(student -> student.getCourses().stream().anyMatch(course -> course.getId().equals(courseId)))
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
+//        List<UserDTO> allStudentsDTO = allStudents.stream().map(this::convertToUserDTO).toList();
+//        List<UserDTO> studentsDTO = new ArrayList<>();
+//        for(UserDTO student : allStudentsDTO){
+//            for(CourseEntity course : student.getCourses()){
+//                if(course.getId() == courseId){
+//                    studentsDTO.add(student);
+//                }
+//            }
+//
+//        }
+//        return studentsDTO;
     }
 
     /**

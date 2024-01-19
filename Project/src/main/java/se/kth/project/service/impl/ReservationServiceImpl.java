@@ -1,5 +1,6 @@
 package se.kth.project.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.ListDTO;
@@ -76,25 +77,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
 
-    @Override
-    public void bookReservation(int listId, UserEntity user) {
-        ListEntity reservationList = listRepository.findById(listId).orElseThrow();
 
-
-        ReservationEntity reservation = new ReservationEntity();
-        reservation.setUser(user);
-        reservation.setList(reservationList);
-        reservation.setDescription(reservationList.getDescription());
-        reservation.setLocation(reservationList.getLocation());
-        reservation.setStart(reservationList.getStart());
-
-        reservationRepository.save(reservation);
-    }
 
     @Override
-    public Booking createBookingObject(Integer listId, Integer studentId) {
+    public Booking createBookingObject(Integer listId) {
         //retrieve the reservation list in question
-        ListEntity list = listRepository.findById(listId).orElseThrow();
+        ListEntity list = listRepository.findById(listId).orElseThrow(() -> new EntityNotFoundException("List not found"));
         //retrieve all reservations for the same list
         List<ReservationEntity> reservations = reservationRepository.findAllByListId(listId);
         int[] sequences = new int[list.getMaxSlots()];
@@ -107,7 +95,6 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         Booking booking = new Booking(listId,
-                studentId,
                 list.getMaxSlots(),
                 list.getStart(),
                 list.getIntervall(),

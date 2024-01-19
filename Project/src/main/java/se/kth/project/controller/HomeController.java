@@ -83,8 +83,8 @@ public class HomeController {
 
     @PostMapping("/course-access/save")
     public String saveStudentCourseAccess(@Valid @ModelAttribute("selectedCourses") SelectedCourseForm selectedCourseForm,
-            BindingResult result,
-            Model model) {
+                                          BindingResult result,
+                                          Model model) {
         List<Integer> ids = selectedCourseForm.getSelectedCourses();
         //DEBUGGING
 //        if (ids != null) {

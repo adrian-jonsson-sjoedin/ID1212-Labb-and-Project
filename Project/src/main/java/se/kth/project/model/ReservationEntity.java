@@ -31,17 +31,11 @@ public class ReservationEntity {
     @JoinColumn(name = "coop_id", nullable = true)
     private UserEntity coopId; // second user id fk
 
-    @Column(nullable = false)
-    private String description;
 
-    @Column(nullable = false)
-    private String location;
-
-    // tidsintervallet mellan varje redovisning i minuter
-    private LocalDateTime start;
     // sequence börjar med 0 -> max_slots, första bokning
     // är starttid, nästa är starttid + interval (från lists)
     //dvs sequence säger vilken slot som är bokad
+    // gjorde om till att spara tiden för bokningen istället
     @Column(nullable = false)
-    private int sequence;
+    private LocalDateTime sequence;
 }
