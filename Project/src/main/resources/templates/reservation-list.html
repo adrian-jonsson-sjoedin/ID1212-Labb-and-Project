@@ -23,12 +23,13 @@
                     <th>Start Time</th>
                     <th>Time per slot (min)</th>
                     <th>Total slots</th>
+                    <th>Spots left</th>
                     <th></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${reservationLists}">
+                <tr th:each="list, listStat : ${reservationLists}">
 
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" th:text="${list.id}"></td>
                     <td th:text="${list.course.getTitle()}"></td>
@@ -37,6 +38,7 @@
                     <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${list.intervall}"></td>
                     <td th:text="${list.maxSlots}"></td>
+                    <td th:text="${spots[__${listStat.index}__]}"></td>
 
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-danger"
@@ -45,18 +47,12 @@
                             Delete
                         </a>
                     </td>
-                    <td class="text-end">
+                    <td class="text-end" th:if="${spots[__${listStat.index}__] > 0}">
                         <a class="btn btn-secondary"
                            th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
                             Book
                         </a>
                     </td>
-<!--                    <td th:if="${#strings.equals(session.userRole, 'student')}" class="text-end">-->
-<!--                        <a class="btn btn-secondary"-->
-<!--                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">-->
-<!--                            Book-->
-<!--                        </a>-->
-<!--                    </td>-->
                 </tr>
                 </tbody>
 

@@ -14,14 +14,46 @@
     <div class="container">
         <div class="text-center mt-5">
             <h2>Create Booking</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Time per slot (min)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${list.course.getTitle()}"></td>
+                    <td th:text="${list.description}"></td>
+                    <td th:text="${list.location}"></td>
+                    <td th:text="${list.intervall}"></td>
+                </tr>
+                </tbody>
+            </table>
             <div th:if="${#strings.equals(session.userRole, 'admin')}">
 
                 <form role="form" method="post" th:action="@{/book/save}" th:object="${booking}">
+                    <!-- Hidden input field to store studentId -->
+                    <input type="hidden" th:field="*{listId}" th:value="${booking.listId}" />
                     <!-- Select which student the booking is for -->
                     <div class="form-group col-md-4">
-                        <label for="studentSelect">Student</label>
-                        <select id="studentSelect" class="form-control" th:field="*{studentId}">
+                        <label for="studentSelect">Student 1</label>
+                        <select id="studentSelect" class="form-control" th:field="*{studentId}" onchange="updateCoopOptions()">
+                            <option value="">Select a student</option>
                             <option th:each="student : ${students}"
+                                    th:value="${student.userId}"
+                                    th:text="${student.username}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="coopSelect">Student 2</label>
+                        <select id="coopSelect" class="form-control" th:field="*{coopId}">
+                            <option value="">Select coop student</option> <!-- Default null value -->
+                            <option
+                                    th:each="student : ${students}"
                                     th:value="${student.userId}"
                                     th:text="${student.username}">
                             </option>
@@ -29,7 +61,7 @@
                     </div>
                     <!-- Show free time slots and select which slots the booking is for -->
                     <div class="form-group col-md-4">
-                        <div th:if="${booking.timeSlots.size() != null}">
+
                         <label for="timeSelect">Select an available time</label>
                         <select id="timeSelect" class="form-control" th:field="*{selectedTime}">
                             <option th:each="timeSlot : ${booking.timeSlots}"
@@ -37,39 +69,52 @@
                                     th:text="${#temporals.format(timeSlot, 'yyyy-MM-dd HH:mm')}">
                             </option>
                         </select>
-                        </div>
                     </div>
+                    <button type="submit" class="btn btn-primary">Create Booking</button>
                 </form>
-
             </div>
 
             <div th:if="${#strings.equals(session.userRole, 'student')}">
-                student
+
+                <form role="form" method="post" th:action="@{/book/save}" th:object="${booking}">
+                    <!-- Hidden input field to store studentId -->
+                    <input type="hidden" th:field="*{listId}" th:value="${booking.listId}" />
+                    <input type="hidden" th:field="*{studentId}" th:value="${booking.studentId}" />
+
+                    <!-- Display student username -->
+                    <!-- Not Sure if we want to display it. It is set anyways -->
+<!--                    <div class="form-group col-md-4">-->
+<!--                        <p th:text="${user.getUserId()}"></p>-->
+<!--                    </div>-->
+                    <div class="form-group col-md-4">
+                        <label for="coopSelectStudent">Select potential partner</label>
+                        <select id="coopSelectStudent" class="form-control" th:field="*{coopId}">
+                            <option value="">Select coop student</option> <!-- Default null value -->
+                            <option
+                                    th:each="student : ${students}"
+                                    th:value="${student.userId}"
+                                    th:text="${student.username}">
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Show free time slots and select which slots the booking is for -->
+                    <div class="form-group col-md-4">
+
+                        <label for="timeSelectStudent">Select an available time</label>
+                        <select id="timeSelectStudent" class="form-control" th:field="*{selectedTime}">
+                            <option th:each="timeSlot : ${booking.timeSlots}"
+                                    th:value="${timeSlot}"
+                                    th:text="${#temporals.format(timeSlot, 'yyyy-MM-dd HH:mm')}">
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Booking</button>
+                </form>
             </div>
-
-<!--            <table class="table table-striped">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>ID</th>-->
-<!--                    <th>Description</th>-->
-<!--                    <th>Location</th>-->
-<!--                    <th>Start Time</th>-->
-<!--                    &lt;!&ndash; Add more columns as needed &ndash;&gt;-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr th:each="booking : ${userBookings}">-->
-<!--                    <td th:text="${booking.id}"></td>-->
-<!--                    <td th:text="${booking.description}"></td>-->
-<!--                    <td th:text="${booking.location}"></td>-->
-<!--                    <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>-->
-
-<!--                    &lt;!&ndash; Add more columns as needed &ndash;&gt;-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
         </div>
     </div>
+
+
 </section>
 
 </body>

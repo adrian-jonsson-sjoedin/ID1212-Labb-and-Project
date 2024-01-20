@@ -40,7 +40,9 @@ public class AuthenticationController {
      */
     @GetMapping("/")
     public String redirectToLogin() {
-
+        if (SecurityUtil.getSessionUser() != null) {
+            return "redirect:/home";
+        }
         return "redirect:/login";
     }
 

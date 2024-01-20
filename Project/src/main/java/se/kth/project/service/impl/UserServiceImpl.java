@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userOptional = userRepository.findByUsernameAndPassword(username, password);
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
-            return convertToUserDTO(user);
+            return convertToDTO(user);
         } else {
             return null;
         }
@@ -95,10 +95,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> retrieveAllStudents() {
         List<UserEntity> users = userRepository.findAllByAdminIsFalse();
-        return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
+        return users.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    private UserDTO convertToUserDTO(UserEntity user) {
+    @Override
+    public UserDTO convertToDTO(UserEntity user) {
         return UserDTO.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
@@ -114,19 +115,8 @@ public class UserServiceImpl implements UserService {
         Integer courseId = list.getCourse().getId();
         return allStudents.stream()
                 .filter(student -> student.getCourses().stream().anyMatch(course -> course.getId().equals(courseId)))
-                .map(this::convertToUserDTO)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
-//        List<UserDTO> allStudentsDTO = allStudents.stream().map(this::convertToUserDTO).toList();
-//        List<UserDTO> studentsDTO = new ArrayList<>();
-//        for(UserDTO student : allStudentsDTO){
-//            for(CourseEntity course : student.getCourses()){
-//                if(course.getId() == courseId){
-//                    studentsDTO.add(student);
-//                }
-//            }
-//
-//        }
-//        return studentsDTO;
     }
 
     /**

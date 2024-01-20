@@ -2,6 +2,7 @@ package se.kth.project.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,6 @@ import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
 import se.kth.project.service.ReservationService;
 import se.kth.project.service.UserService;
-import se.kth.project.util.CalculateFreeSlotsAndTime;
 
 import java.util.List;
 
@@ -35,18 +35,6 @@ public class ReservationController {
         this.reservationService = reservationService;
         this.courseService = courseService;
         this.userService = userService;
-    }
-
-    @GetMapping("/reservation-list")
-    public String displayReservations(Model model) {
-        List<ListEntity> reservationLists = reservationService.getAllLists();
-        model.addAttribute("reservationLists", reservationLists);
-        int[] nummbeOfAvailableSlots = new int[reservationLists.size()];
-        int i = 0;
-        for(ListEntity list : reservationLists){
-            nummbeOfAvailableSlots[i] = CalculateFreeSlotsAndTime.getAvailableTimeSlots(list.getStart(), list.getIntervall(), list.getS)
-        }
-        return "reservation-list";
     }
 
 
@@ -84,6 +72,18 @@ public class ReservationController {
         return "redirect:/create-list?error";
     }
 
+    @GetMapping("/reservation-list")
+    public String displayReservations(Model model) {
+        List<ListEntity> reservationLists = reservationService.getAllLists();
+        model.addAttribute("reservationLists", reservationLists);
+        int[] spots = new int[reservationLists.size()];
+        for (int i = 0; i < reservationLists.size(); i++) {
+            spots[i] = reservationService.getNumberOfAvailableSpotsLeft(reservationLists.get(i).getId());
+        }
+        model.addAttribute("spots", spots);
+        return "reservation-list";
+    }
+
     @GetMapping("/reservation-list/{listId}/delete")
     public String deleteReservation(@PathVariable int listId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
@@ -97,46 +97,43 @@ public class ReservationController {
 
     @GetMapping("/reservation-list/{listId}/book")
     public String bookReservationForm(@PathVariable("listId") Integer listId, Model model) {
-        if (SecurityUtil.isUserAdmin()) {
+        String username = SecurityUtil.getSessionUser();
+        if (SecurityUtil.getSessionUser() == null) {
+            throw new UsernameNotFoundException("User could not be found");
+        }
+        // get list to display course info
+        ListDTO list = reservationService.findListById(listId);
+        model.addAttribute("list", list);
+        //send in the booking object so that we can list times and slots that are bookable
+        Booking booking = reservationService.createBookingObject(listId);
+        model.addAttribute("booking", booking);
+        if (SecurityUtil.isUserAdmin()) { //FOR ADMINS
             //get all students that have course access to the course with the corresponding course id
             List<UserDTO> students = userService.retrieveAllStudentsForCourseByListId(listId);
             model.addAttribute("students", students);
-            //send in the booking object so that we can list times and slots that are bookable
-            Booking booking = reservationService.createBookingObject(listId);
-            model.addAttribute("booking", booking);
-return "book";
+            return "book";
+        } else if (!SecurityUtil.isUserAdmin()) {
+            UserDTO user = userService.convertToDTO(userService.findByUsername(username));
+            model.addAttribute("user", user);
+            booking.setStudentId(user.getUserId());
+            List<UserDTO> students = userService.retrieveAllStudentsForCourseByListId(listId);
+            students.remove(user);
+            model.addAttribute("students", students);
+            return "book";
         }
-//        String username = SecurityUtil.getSessionUser();
-//        if (username != null) {
-//            UserEntity user = userService.findByUsername(username);
-//            reservationService.bookReservation(listId, user);
-//            return "book";
-//        }
-        return "redirect:/login";
+        return "redirect:/reservation-list";
     }
 
     @PostMapping("/book/save")
     public String saveStudentReservation(@ModelAttribute("booking") Booking booking,
                                          BindingResult result,
                                          Model model) {
+        System.out.println(booking);
+        reservationService.createReservation(booking);
         return "redirect:/reservation-list?success";
     }
 
-    @GetMapping("/my-bookings")
-    public String showMyBookings(Model model) {
-        String username = SecurityUtil.getSessionUser();
-        if (username != null) {
-            UserEntity user = userService.findByUsername(username);
-            List<ReservationEntity> userBookings = reservationService.getReservationsByUserId(user.getId());
 
-            // Log userBookings for debugging
-            System.out.println("User Bookings: " + userBookings);
-
-            model.addAttribute("userBookings", userBookings);
-            return "book";
-        }
-        return "redirect:/login";
-    }
 
 
 }
