@@ -73,6 +73,8 @@ public class ReservationController {
     @GetMapping("/reservation-list")
     public String displayReservations(Model model) {
         UserDTO user = userService.convertToDTO(userService.findByUsername(SecurityUtil.getSessionUser()));
+        boolean NO_LISTS = false;
+        model.addAttribute("NO_LISTS", NO_LISTS);
         if (SecurityUtil.isUserAdmin()) {
             List<ListEntity> reservationLists = reservationService.getAllLists();
             model.addAttribute("reservationLists", reservationLists);
@@ -85,12 +87,17 @@ public class ReservationController {
         } else {
             List<CourseEntity> courses = user.getCourses();
             List<ListEntity> reservationLists = reservationService.getAllListsThatStudentHasAccessTo(courses);
-            model.addAttribute("reservationLists", reservationLists);
-            int[] spots = new int[reservationLists.size()];
-            for (int i = 0; i < reservationLists.size(); i++) {
-                spots[i] = reservationService.getNumberOfAvailableSpotsLeft(reservationLists.get(i).getId());
+            if (reservationLists == null) {
+                NO_LISTS = true;
+                model.addAttribute("NO_LISTS", NO_LISTS);
+            } else {
+                model.addAttribute("reservationLists", reservationLists);
+                int[] spots = new int[reservationLists.size()];
+                for (int i = 0; i < reservationLists.size(); i++) {
+                    spots[i] = reservationService.getNumberOfAvailableSpotsLeft(reservationLists.get(i).getId());
+                }
+                model.addAttribute("spots", spots);
             }
-            model.addAttribute("spots", spots);
             return "reservation-list";
         }
     }

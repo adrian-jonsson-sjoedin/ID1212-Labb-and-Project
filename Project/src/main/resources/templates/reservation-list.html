@@ -13,7 +13,10 @@
     <div class="main">
         <div class="col-md-12">
             <h2>Reservation List</h2>
-            <table class="table table-striped">
+            <div th:if="${NO_LISTS}">
+                No lists available for booking.
+            </div>
+            <table class="table table-striped" th:if="${!NO_LISTS}">
                 <thead>
                 <tr>
                     <th th:if="${#strings.equals(session.userRole, 'admin')}">ID</th>
@@ -45,6 +48,10 @@
                            th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
                             Book
                         </a>
+                    </td>
+                    <td class="text-end" th:if="${spots[__${listStat.index}__] <= 0}">
+
+
                     </td>
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-danger"

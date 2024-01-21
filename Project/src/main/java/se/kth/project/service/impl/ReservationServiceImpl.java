@@ -78,6 +78,11 @@ public class ReservationServiceImpl implements ReservationService {
         for (CourseEntity course : courses) {
             list.add(listRepository.findByCourse_Id(course.getId()));
         }
+        //we need to filter out all elements from list that are null before returning null. If all elements are
+        // null we can return null
+        if (list.size() == 1 && list.get(0) == null) {
+            return null;
+        }
         return list;
     }
 
