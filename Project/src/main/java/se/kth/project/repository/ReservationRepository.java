@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import se.kth.project.model.ListEntity;
 import se.kth.project.model.ReservationEntity;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
      List<ReservationEntity> findByUserId(int userId);
 
      List<ReservationEntity> findByCoopId_Id(int coopId);
+
+
 
      @Query("SELECT COUNT(r) FROM ReservationEntity r WHERE r.list.id=:listId")
      int countReservationsForListByListId(@Param("listId") Integer listId);

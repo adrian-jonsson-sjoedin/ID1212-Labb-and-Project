@@ -1,10 +1,13 @@
 package se.kth.project.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.CourseDTO;
 import se.kth.project.model.CourseEntity;
+import se.kth.project.model.ListEntity;
 import se.kth.project.repository.CourseRepository;
+import se.kth.project.repository.ListRepository;
 import se.kth.project.service.CourseService;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
+    private final ListRepository listRepository;
 
     /**
      * Constructs a new instance of the {@code CourseServiceImpl} class.
@@ -27,8 +31,10 @@ public class CourseServiceImpl implements CourseService {
      * @param courseRepository The repository for course-related database operations.
      */
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, ListRepository listRepository) {
         this.courseRepository = courseRepository;
+        this.listRepository = listRepository;
+
     }
 
     /**
@@ -81,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseEntity> getCoursesFromIdList(List<Integer> courseIdList) {
         List<CourseEntity> selectedCourses = new ArrayList<>();
-        for(Integer courseId : courseIdList){
+        for (Integer courseId : courseIdList) {
             // Use Optional to handle the possibility of a null result
             Optional<CourseEntity> courseOptional = courseRepository.findById(courseId);
 
@@ -92,7 +98,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void delete(Integer courseId) {
-        courseRepository.deleteById(courseId);
+    @Transactional
+    public int delete(Integer courseId) {
+        ListEntity list = listRepository.findByCourse_Id(courseId);
+        if (list == null) {
+            courseRepository.deleteByCourseId(courseId);
+            courseRepository.deleteById(courseId);
+            return 0;
+        } else {
+            return -1;
+        }
     }
 }

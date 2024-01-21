@@ -100,7 +100,7 @@ public class HomeController {
 //            System.out.println("No courses selected");
 //        }
         if(result.hasErrors()){
-            model.addAttribute("user", userService.findById(selectedCourseForm.getStudentId()));
+            model.addAttribute("user", userService.convertToDTO(userService.findById(selectedCourseForm.getStudentId())));
             model.addAttribute("courses", courseService.getAllCourses());
             SelectedCourseForm selectedCourse = new SelectedCourseForm();
             selectedCourse.setStudentId(selectedCourseForm.getStudentId());

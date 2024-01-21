@@ -7,10 +7,14 @@ import java.util.List;
 
 public interface CourseService {
     List<CourseDTO> getAllCourses();
+
     void saveCourse(CourseDTO courseDTO);
+
     CourseEntity findByTitle(String title);
 
-    void delete(Integer courseId);
+    int delete(Integer courseId);
+
     CourseEntity findById(Integer id);
+
     List<CourseEntity> getCoursesFromIdList(List<Integer> courseIdList);
 }

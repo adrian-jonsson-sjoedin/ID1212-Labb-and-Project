@@ -8,6 +8,9 @@
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body">
+        <div th:if="${param.success}" class="alert alert-success">
+            New user added!
+        </div>
         <div class="mt-1">
             <h4>Students</h4>
             <table class="table table-striped">
@@ -45,6 +48,9 @@
             <a class="btn btn-secondary"
                th:href="@{/register}">
                 Add new student</a>
+            <a class="btn btn-secondary"
+               th:href="@{/home}">
+                Back</a>
         </div>
     </section>
 </main>

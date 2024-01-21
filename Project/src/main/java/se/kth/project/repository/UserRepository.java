@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query(value = "DELETE FROM course_access WHERE user_id = :userId", nativeQuery = true)
     void deleteCourseAccessByUserId(Integer userId);
 
+
     @Query(value = "SELECT DISTINCT u.* " +
             "FROM users u " +
             "JOIN course_access ca ON u.id = ca.user_id " +

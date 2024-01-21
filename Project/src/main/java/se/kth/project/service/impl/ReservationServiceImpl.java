@@ -5,10 +5,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.kth.project.dto.ListDTO;
-import se.kth.project.model.Booking;
-import se.kth.project.model.ListEntity;
-import se.kth.project.model.ReservationEntity;
-import se.kth.project.model.UserEntity;
+import se.kth.project.model.*;
 import se.kth.project.repository.ListRepository;
 import se.kth.project.repository.ReservationRepository;
 import se.kth.project.repository.UserRepository;
@@ -75,6 +72,14 @@ public class ReservationServiceImpl implements ReservationService {
         return listRepository.findAll();
     }
 
+    @Override
+    public List<ListEntity> getAllListsThatStudentHasAccessTo(List<CourseEntity> courses) {
+        List<ListEntity> list = new ArrayList<>();
+        for (CourseEntity course : courses) {
+            list.add(listRepository.findByCourse_Id(course.getId()));
+        }
+        return list;
+    }
 
     @Override
     public void createReservation(Booking booking) {

@@ -58,20 +58,28 @@ public class CourseController {
             return "create-course";
         }
         courseService.saveCourse(course);
-        return "redirect:/create-course?success";
+        return "redirect:/create-course?savedSuccess";
     }
 
     @GetMapping("/create-course/{courseId}/delete")
     public String deleteCourse(@PathVariable("courseId") Integer courseId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
-            courseService.delete(courseId);
-            //Need to add the courses again to repopulate the course list in the view
-            List<CourseDTO> courses = courseService.getAllCourses();
-            model.addAttribute("courses", courses);
-            return "redirect:/create-course";
+            int deleteStatus = courseService.delete(courseId);
+            if (deleteStatus == 0) {//Successful delete
+                //Need to add the courses again to repopulate the course list in the view
+                List<CourseDTO> courses = courseService.getAllCourses();
+                model.addAttribute("courses", courses);
+                return "redirect:/create-course?success";
+            } else if (deleteStatus == -1) {
+                //Need to add the courses again to repopulate the course list in the view
+                List<CourseDTO> courses = courseService.getAllCourses();
+                model.addAttribute("courses", courses);
+                return "redirect:/create-course?unsuccessful";
+            }
         } else {
             return "redirect:/home?unauthorized";
         }
+        return "redirect:/home?unauthorized";
     }
 
 }
