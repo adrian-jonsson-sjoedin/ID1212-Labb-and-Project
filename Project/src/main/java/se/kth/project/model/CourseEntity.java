@@ -22,6 +22,6 @@ public class CourseEntity {
     @Column(nullable = false)
     private String title;
 
-    @ManyToMany(mappedBy = "courses")
+    @ManyToMany(mappedBy = "courses", cascade = CascadeType.REMOVE)
     private List<UserEntity> users = new ArrayList<>();
 }

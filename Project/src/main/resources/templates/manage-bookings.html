@@ -3,18 +3,18 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
 <head>
-    <title>Manage Students</title>
+    <title>Manage Bookings</title>
 </head>
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body">
         <div class="mt-1">
-            <h4 th:text="${user.username + 's bookings'}"></h4>
+            <h4 th:text="${'Bookings for ' + user.username}"></h4>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Booked by</th>
-                    <th>Partner</th>
+                    <th>Student 1</th>
+                    <th>Student 2</th>
                     <th>Course name</th>
                     <th>Description</th>
                     <th>Start time</th>
@@ -29,7 +29,7 @@
                     <td th:text="${reservation.list.course.title}"></td>
                     <td th:text="${reservation.list.description}"></td>
                     <td th:text="${#temporals.format(reservation.sequence, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:if="${reservation.user.id == user.userId}" class="text-end">
+                    <td th:if="${reservation.user.id == user.userId || #strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-danger"
                            th:href="@{/manage-bookings/{reservationId}/delete/{studentId}(studentId=${reservation.user.id}, reservationId=${reservation.id})}"
                            onclick="return confirm('Are you sure you want to delete this booking?')">
@@ -40,6 +40,7 @@
                 </tr>
                 </tbody>
             </table>
+            <a class="btn btn-secondary" th:href="@{/manage-students}">Back</a>
         </div>
     </section>
 </main>

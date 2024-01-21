@@ -1,6 +1,7 @@
 package se.kth.project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import se.kth.project.model.ReservationEntity;
@@ -20,7 +21,9 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
      @Query("SELECT r.sequence FROM ReservationEntity r WHERE r.list.id=:listId")
      List<LocalDateTime> getSequenceForReservationByListId(@Param("listId") Integer listId);
 
-
+     @Modifying
+     @Query("DELETE FROM ReservationEntity r WHERE r.user.id = :userId OR r.coopId.id = :userId")
+     void deleteReservationsByUserId(@Param("userId") Integer userId);
 
      void deleteByListId(Integer listId);
 }

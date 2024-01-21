@@ -10,6 +10,7 @@ import se.kth.project.dto.UserDTO;
 import se.kth.project.model.ListEntity;
 import se.kth.project.model.UserEntity;
 import se.kth.project.repository.ListRepository;
+import se.kth.project.repository.ReservationRepository;
 import se.kth.project.repository.UserRepository;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.UserService;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ListRepository listRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -33,9 +35,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            ListRepository listRepository,
+                           ReservationRepository reservationRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.listRepository = listRepository;
+        this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -135,6 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(Integer studentId) {
+        reservationRepository.deleteReservationsByUserId(studentId);
         userRepository.deleteCourseAccessByUserId(studentId);
         userRepository.deleteById(studentId);
     }

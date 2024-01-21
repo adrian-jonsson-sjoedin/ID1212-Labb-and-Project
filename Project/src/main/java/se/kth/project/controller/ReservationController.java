@@ -134,7 +134,7 @@ public class ReservationController {
         if (SecurityUtil.isUserAdmin() || Objects.equals(userService.findByUsername(SecurityUtil.getSessionUser()).getId(), studentId)) {
             List<ReservationEntity> reservations = reservationService.getAllReservationsForStudent(studentId, studentId);
             model.addAttribute("reservations", reservations);
-            UserDTO user = userService.convertToDTO(userService.findByUsername(SecurityUtil.getSessionUser()));
+            UserDTO user = userService.convertToDTO(userService.findById(studentId));
             model.addAttribute("user", user);
             return "manage-bookings";
         } else {

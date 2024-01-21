@@ -26,6 +26,7 @@ public class HomeController {
     private final UserService userService;
     private final CourseService courseService;
 
+
     @Autowired
     public HomeController(UserService userService, CourseService courseService) {
         this.userService = userService;
@@ -56,6 +57,8 @@ public class HomeController {
     @GetMapping("/manage-students/{studentId}/delete")
     public String deleteStudent(@PathVariable("studentId") Integer studentId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
+
+//            reservationService.deleteReservation(reservationId);
             userService.delete(studentId);
             List<UserDTO> students = userService.retrieveAllStudents();
             model.addAttribute("students", students);

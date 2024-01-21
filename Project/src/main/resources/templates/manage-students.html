@@ -25,7 +25,7 @@
                     <td class="text-end">
                         <a class="btn btn-secondary"
                            th:href="@{manage-students/{studentId}/setCourseAccess(studentId=${student.userId})}">
-                            Set course access</a>
+                            See/Set course access</a>
                     </td>
                     <td class="text-end">
                         <a class="btn btn-secondary"
@@ -42,6 +42,9 @@
                 </tr>
                 </tbody>
             </table>
+            <a class="btn btn-secondary"
+               th:href="@{/register}">
+                Add new student</a>
         </div>
     </section>
 </main>

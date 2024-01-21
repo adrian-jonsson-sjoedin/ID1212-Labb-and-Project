@@ -93,11 +93,13 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void deleteReservation(Integer reservationId) {
         reservationRepository.deleteById(reservationId);
     }
 
     @Override
+    @Transactional
     public void saveList(ListDTO listDTO) {
         ListEntity list = new ListEntity();
         list.setUser(listDTO.getUser());

@@ -40,6 +40,12 @@
                     <td th:text="${list.maxSlots}"></td>
                     <td th:text="${spots[__${listStat.index}__]}"></td>
 
+                    <td class="text-end" th:if="${spots[__${listStat.index}__] > 0}">
+                        <a class="btn btn-secondary"
+                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
+                            Book
+                        </a>
+                    </td>
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-danger"
                            th:href="@{/reservation-list/{listId}/delete(listId=${list.id})}"
@@ -47,12 +53,7 @@
                             Delete
                         </a>
                     </td>
-                    <td class="text-end" th:if="${spots[__${listStat.index}__] > 0}">
-                        <a class="btn btn-secondary"
-                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
-                            Book
-                        </a>
-                    </td>
+
                 </tr>
                 </tbody>
 

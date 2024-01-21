@@ -97,7 +97,7 @@ public class AuthenticationController {
         }
         int status = userService.saveUser(user);
         if (status == 0) {
-            return "redirect:/home?success";
+            return "redirect:/manage-students?success";
         } else {
             return "redirect:/register?unauthorized";
         }
