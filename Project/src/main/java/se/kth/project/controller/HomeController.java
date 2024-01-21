@@ -33,10 +33,12 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String displayHomeAdminPage(HttpSession session) {
+    public String displayHomeAdminPage(HttpSession session, Model model) {
         System.out.println("Printing session user role " + (SecurityUtil.isUserAdmin() ? "admin" : "student"));
         String userRole = SecurityUtil.isUserAdmin() ? "admin" : "student";
         session.setAttribute("userRole", userRole);
+        UserDTO user = userService.convertToDTO(userService.findByUsername(SecurityUtil.getSessionUser()));
+        model.addAttribute("user", user);
         return "home";
     }
 
@@ -66,7 +68,7 @@ public class HomeController {
     @GetMapping("/manage-students/{studentId}/setCourseAccess")
     public String setStudentCourseAccessForm(@PathVariable("studentId") Integer studentId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
-            UserEntity user = userService.findById(studentId);
+            UserDTO user = userService.convertToDTO(userService.findById(studentId));
             model.addAttribute("user", user);
 
             List<CourseDTO> courses = courseService.getAllCourses();

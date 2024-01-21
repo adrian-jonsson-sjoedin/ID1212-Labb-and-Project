@@ -40,6 +40,20 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public List<ReservationEntity> getAllReservationsForStudent(Integer studentId, Integer coopId) {
+        List<ReservationEntity> reservations = reservationRepository.findByUserId(studentId);
+        List<ReservationEntity> reservationsByPartner = reservationRepository.findByCoopId_Id(coopId);
+        reservations.addAll(reservationsByPartner);
+        return reservations;
+    }
+
+
+    @Override
+    public ReservationEntity findByReservationId(Integer reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+    }
+
+    @Override
     public ListDTO findListById(Integer listId) {
         ListEntity list = listRepository.findById(listId).orElseThrow(() -> new EntityNotFoundException("List not found"));
         return convertToListDTO(list);
@@ -77,6 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservation);
 
     }
+
     @Override
     public void deleteReservation(Integer reservationId) {
         reservationRepository.deleteById(reservationId);
@@ -102,7 +117,6 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.deleteByListId(listId);
         listRepository.deleteById(listId);
     }
-
 
 
     @Override

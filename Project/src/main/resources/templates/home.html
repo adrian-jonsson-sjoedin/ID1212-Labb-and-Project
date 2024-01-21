@@ -25,8 +25,12 @@
                 <a class="nav-link btn btn-primary my-1" th:href="@{/create-list}">Create new list for reservations</a>
                 <a class="nav-link btn btn-primary my-1" th:href="@{/manage-students}">Manage students</a>
             </div>
-
             <a class="nav-link btn btn-primary my-1" th:href="@{/reservation-list}">See reservation lists</a>
+       <div th:if="${#strings.equals(session.userRole, 'student')}">
+           <a class="nav-link btn btn-primary my-1"
+              th:href="@{manage-students/{studentId}/manage-bookings(studentId=${user.userId})}">
+               Manage my bookings</a>
+       </div>
         </div>
     </div>
 </section>

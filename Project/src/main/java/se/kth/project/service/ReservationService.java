@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface ReservationService {
     List<ReservationEntity> getAllReservations();
+
+    List<ReservationEntity> getAllReservationsForStudent(Integer studentId, Integer coopId);
+
+    ReservationEntity findByReservationId(Integer reservationId);
     List<ListEntity> getAllLists();
 
 

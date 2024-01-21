@@ -6,10 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import se.kth.project.dto.CourseDTO;
 import se.kth.project.dto.ListDTO;
 import se.kth.project.dto.UserDTO;
@@ -20,6 +17,7 @@ import se.kth.project.service.ReservationService;
 import se.kth.project.service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ReservationController {
@@ -125,15 +123,35 @@ public class ReservationController {
     }
 
     @PostMapping("/book/save")
-    public String saveStudentReservation(@ModelAttribute("booking") Booking booking,
-                                         BindingResult result,
-                                         Model model) {
+    public String saveStudentReservation(@ModelAttribute("booking") Booking booking) {
         System.out.println(booking);
         reservationService.createReservation(booking);
         return "redirect:/reservation-list?success";
     }
 
+    @GetMapping("manage-students/{studentId}/manage-bookings")
+    public String manageBookings(@PathVariable("studentId") Integer studentId, Model model) {
+        if (SecurityUtil.isUserAdmin() || Objects.equals(userService.findByUsername(SecurityUtil.getSessionUser()).getId(), studentId)) {
+            List<ReservationEntity> reservations = reservationService.getAllReservationsForStudent(studentId, studentId);
+            model.addAttribute("reservations", reservations);
+            UserDTO user = userService.convertToDTO(userService.findByUsername(SecurityUtil.getSessionUser()));
+            model.addAttribute("user", user);
+            return "manage-bookings";
+        } else {
+            return "redirect:/home?unauthorized";
+        }
+    }
 
-
+    @GetMapping("/manage-bookings/{reservationId}/delete/{studentId}")
+    public String deleteReservation(@PathVariable("reservationId") Integer reservationId,
+                                    @PathVariable("studentId") Integer studentId) {
+        ReservationEntity reservation = reservationService.findByReservationId(reservationId);
+        if (SecurityUtil.isUserAdmin() ||
+                userService.findByUsername(SecurityUtil.getSessionUser()).getId().equals(reservation.getUser().getId())) {
+            reservationService.deleteReservation(reservationId);
+            return "redirect:/manage-students/{studentId}/manage-bookings?success";
+        }
+        return "redirect:/home?unauthorized";
+    }
 
 }

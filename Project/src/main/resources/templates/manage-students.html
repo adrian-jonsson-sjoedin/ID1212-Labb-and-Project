@@ -28,8 +28,14 @@
                             Set course access</a>
                     </td>
                     <td class="text-end">
+                        <a class="btn btn-secondary"
+                           th:href="@{manage-students/{studentId}/manage-bookings(studentId=${student.userId})}">
+                            Manage bookings</a>
+                    </td>
+                    <td class="text-end">
                         <a class="btn btn-danger"
-                           th:href="@{/manage-students/{studentId}/delete(studentId=${student.userId})}">
+                           th:href="@{/manage-students/{studentId}/delete(studentId=${student.userId})}"
+                           onclick="return confirm('Are you sure you want to delete this student?')">
                             Delete Student
                         </a>
                     </td>

@@ -12,13 +12,15 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
      List<ReservationEntity> findByUserId(int userId);
 
+     List<ReservationEntity> findByCoopId_Id(int coopId);
+
      @Query("SELECT COUNT(r) FROM ReservationEntity r WHERE r.list.id=:listId")
      int countReservationsForListByListId(@Param("listId") Integer listId);
 
      @Query("SELECT r.sequence FROM ReservationEntity r WHERE r.list.id=:listId")
      List<LocalDateTime> getSequenceForReservationByListId(@Param("listId") Integer listId);
 
-     List<ReservationEntity> findAllByListId(Integer listId);
+
 
      void deleteByListId(Integer listId);
 }
