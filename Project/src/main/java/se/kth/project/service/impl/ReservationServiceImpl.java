@@ -76,13 +76,15 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ListEntity> getAllListsThatStudentHasAccessTo(List<CourseEntity> courses) {
         List<ListEntity> list = new ArrayList<>();
         for (CourseEntity course : courses) {
-            list.add(listRepository.findByCourse_Id(course.getId()));
+            ListEntity temp = listRepository.findByCourse_Id(course.getId());
+            if(temp!= null){
+                list.add(temp);
+            }
+
         }
         //we need to filter out all elements from list that are null before returning null. If all elements are
         // null we can return null
-        if (list.size() == 1 && list.get(0) == null) {
-            return null;
-        }
+
         return list;
     }
 
