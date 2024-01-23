@@ -8,7 +8,7 @@
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body">
-        <div class="mt-1">
+        <div class="container mt-2">
             <h4 th:text="${'Bookings for ' + user.username}"></h4>
 
             <div th:if="${param.success}" class="alert alert-success">
