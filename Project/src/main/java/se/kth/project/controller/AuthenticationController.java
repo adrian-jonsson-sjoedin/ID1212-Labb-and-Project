@@ -21,7 +21,7 @@ import se.kth.project.service.UserService;
  */
 @Controller
 public class AuthenticationController {
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Constructs a new instance of the {@code AuthenticationController} class.
@@ -40,7 +40,9 @@ public class AuthenticationController {
      */
     @GetMapping("/")
     public String redirectToLogin() {
-
+        if (SecurityUtil.getSessionUser() != null) {
+            return "redirect:/home";
+        }
         return "redirect:/login";
     }
 
@@ -95,7 +97,7 @@ public class AuthenticationController {
         }
         int status = userService.saveUser(user);
         if (status == 0) {
-            return "redirect:/home?success";
+            return "redirect:/manage-students?success=New user added !";
         } else {
             return "redirect:/register?unauthorized";
         }

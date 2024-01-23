@@ -10,30 +10,55 @@
 </head>
 <section layout:fragment="body">
 
-    <div class="main">
+    <div class="container mt-2">
         <div class="col-md-12">
             <h2>Reservation List</h2>
-            <table class="table table-striped">
+
+            <div th:if="${param.success}" class="alert alert-success">
+                <p th:text="${param.success}"></p>
+            </div>
+
+            <div th:if="${NO_LISTS}">
+                No lists available for booking.
+            </div>
+
+            <table class="table table-striped" th:if="${!NO_LISTS}">
                 <thead>
                 <tr>
                     <th th:if="${#strings.equals(session.userRole, 'admin')}">ID</th>
+                    <th>Course</th>
                     <th>Description</th>
                     <th>Location</th>
                     <th>Start Time</th>
                     <th>Time per slot (min)</th>
                     <th>Total slots</th>
+                    <th>Spots left</th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${reservationLists}">
+                <tr th:each="list, listStat : ${reservationLists}">
 
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" th:text="${list.id}"></td>
+                    <td th:text="${list.course.getTitle()}"></td>
                     <td th:text="${list.description}"></td>
                     <td th:text="${list.location}"></td>
                     <td th:text="${#temporals.format(list.start, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${list.intervall}"></td>
                     <td th:text="${list.maxSlots}"></td>
+                    <td th:text="${spots[__${listStat.index}__]}"></td>
 
+                    <td class="text-end" th:if="${spots[__${listStat.index}__] > 0}">
+                        <a class="btn btn-secondary"
+                           th:href="@{/reservation-list/{listId}/book(listId=${list.id})}">
+                            Book
+                        </a>
+                    </td>
+                    <td class="text-end" th:if="${spots[__${listStat.index}__] <= 0}">
+
+
+                    </td>
                     <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
                         <a class="btn btn-danger"
                            th:href="@{/reservation-list/{listId}/delete(listId=${list.id})}"
@@ -41,22 +66,13 @@
                             Delete
                         </a>
                     </td>
-                    <td th:if="${#strings.equals(session.userRole, 'admin')}" class="text-end">
-                        <a class="btn btn-secondary"
-                           th:href="@{/book/{listId}(listId=${list.id})}">
-                            Book
-                        </a>
-                    </td>
-                    <td th:if="${#strings.equals(session.userRole, 'student')}" class="text-end">
-                        <a class="btn btn-secondary"
-                           th:href="@{/book/{listId}(listId=${list.id})}">
-                            Book
-                        </a>
-                    </td>
+
                 </tr>
                 </tbody>
-
             </table>
+            <a class="btn btn-secondary"
+               th:href="@{/home}">
+                Back</a>
         </div>
     </div>
 

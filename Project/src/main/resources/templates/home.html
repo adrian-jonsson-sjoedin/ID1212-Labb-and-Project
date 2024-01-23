@@ -4,6 +4,25 @@
 
 <head>
     <title th:text="'Home - ' + ${#authentication.authorities}"></title>
+    <style>
+
+        .custom-btn {
+            margin: 11px;
+            font-size: 22px;
+        }
+
+        .admin-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: 1px solid #3498db;
+        }
+
+        .student-btn {
+            background-color: #2ecc71;
+            color: #fff;
+            border: 1px solid #2ecc71;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column h-100">
 
@@ -15,18 +34,20 @@
         </div>
         <div class="text-center mt-5">
             <h1 th:text="'Welcome ' + ${#authentication.principal.username} + '!'"></h1>
-            <p class="lead"> Home page </p>
-
 
             <!-- Conditionally render the admin-specific buttons based on what role is saved in userRole -->
             <div th:if="${#strings.equals(session.userRole, 'admin')}">
-                <a class="nav-link btn btn-primary my-1" th:href="@{/register}">Add new Admin/Student</a>
-                <a class="nav-link btn btn-primary my-1" th:href="@{/create-course}">See courses/Create new course</a>
-                <a class="nav-link btn btn-primary my-1" th:href="@{/create-list}">Create new list for reservations</a>
-                <a class="nav-link btn btn-primary my-1" th:href="@{/manage-students}">Manage students</a>
+                <a class="nav-link btn custom-btn admin-btn" th:href="@{/register}">Add new Admin/Student</a>
+                <a class="nav-link btn custom-btn admin-btn" th:href="@{/create-course}">See courses/Create new course</a>
+                <a class="nav-link btn custom-btn admin-btn" th:href="@{/create-list}">Create new list for reservations</a>
+                <a class="nav-link btn custom-btn admin-btn" th:href="@{/manage-students}">Manage students</a>
             </div>
-
-            <a class="nav-link btn btn-primary my-1" th:href="@{/reservation-list}">See reservation lists</a>
+            <a class="nav-link btn custom-btn student-btn" th:href="@{/reservation-list}">See reservation lists</a>
+            <div th:if="${#strings.equals(session.userRole, 'student')}">
+                <a class="nav-link btn custom-btn student-btn"
+                   th:href="@{manage-students/{studentId}/manage-bookings(studentId=${user.userId})}">
+                    Manage my bookings</a>
+            </div>
         </div>
     </div>
 </section>

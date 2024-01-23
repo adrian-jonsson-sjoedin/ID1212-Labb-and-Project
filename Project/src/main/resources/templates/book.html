@@ -1,0 +1,122 @@
+<!-- book.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Bookings</title>
+</head>
+<body class="d-flex flex-column h-100">
+
+<!-- Page content -->
+<section layout:fragment="body" class="py-5">
+    <div class="container mt-2">
+        <div>
+            <h2>Create Booking</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Time per slot (min)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${list.course.getTitle()}"></td>
+                    <td th:text="${list.description}"></td>
+                    <td th:text="${list.location}"></td>
+                    <td th:text="${list.intervall}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${#strings.equals(session.userRole, 'admin')}">
+
+                <form role="form" method="post" th:action="@{/book/save}" th:object="${booking}">
+                    <!-- Hidden input field to store studentId -->
+                    <input type="hidden" th:field="*{listId}" th:value="${booking.listId}" />
+                    <!-- Select which student the booking is for -->
+                    <div class="form-group col-md-4">
+                        <label for="studentSelect">Student 1</label>
+                        <select id="studentSelect" class="form-control" th:field="*{studentId}" onchange="updateCoopOptions()">
+                            <option value="">Select a student</option>
+                            <option th:each="student : ${students}"
+                                    th:value="${student.userId}"
+                                    th:text="${student.username}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="coopSelect">Student 2</label>
+                        <select id="coopSelect" class="form-control" th:field="*{coopId}">
+                            <option value="">Select coop student</option> <!-- Default null value -->
+                            <option
+                                    th:each="student : ${students}"
+                                    th:value="${student.userId}"
+                                    th:text="${student.username}">
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Show free time slots and select which slots the booking is for -->
+                    <div class="form-group col-md-4">
+
+                        <label for="timeSelect">Select an available time</label>
+                        <select id="timeSelect" class="form-control" th:field="*{selectedTime}">
+                            <option th:each="timeSlot : ${booking.timeSlots}"
+                                    th:value="${timeSlot}"
+                                    th:text="${#temporals.format(timeSlot, 'yyyy-MM-dd HH:mm')}">
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Create Booking</button>
+                </form>
+            </div>
+
+            <div th:if="${#strings.equals(session.userRole, 'student')}">
+
+                <form role="form" method="post" th:action="@{/book/save}" th:object="${booking}">
+                    <!-- Hidden input field to store studentId -->
+                    <input type="hidden" th:field="*{listId}" th:value="${booking.listId}" />
+                    <input type="hidden" th:field="*{studentId}" th:value="${booking.studentId}" />
+
+                    <!-- Display student username -->
+                    <!-- Not Sure if we want to display it. It is set anyways -->
+<!--                    <div class="form-group col-md-4">-->
+<!--                        <p th:text="${user.getUserId()}"></p>-->
+<!--                    </div>-->
+                    <div class="form-group col-md-4">
+                        <label for="coopSelectStudent">Select potential partner</label>
+                        <select id="coopSelectStudent" class="form-control" th:field="*{coopId}">
+                            <option value="">Select coop student</option> <!-- Default null value -->
+                            <option
+                                    th:each="student : ${students}"
+                                    th:value="${student.userId}"
+                                    th:text="${student.username}">
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Show free time slots and select which slots the booking is for -->
+                    <div class="form-group col-md-4">
+
+                        <label for="timeSelectStudent">Select an available time</label>
+                        <select id="timeSelectStudent" class="form-control" th:field="*{selectedTime}">
+                            <option th:each="timeSlot : ${booking.timeSlots}"
+                                    th:value="${timeSlot}"
+                                    th:text="${#temporals.format(timeSlot, 'yyyy-MM-dd HH:mm')}">
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Create Booking</button>
+                </form>
+            </div>
+            <a class="btn btn-secondary my-1" th:href="@{/reservation-list}">Back</a>
+        </div>
+    </div>
+
+
+</section>
+
+</body>
+</html>
