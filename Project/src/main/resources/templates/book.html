@@ -12,7 +12,7 @@
 <!-- Page content -->
 <section layout:fragment="body" class="py-5">
     <div class="container">
-        <div class="text-center mt-5">
+        <div>
             <h2>Create Booking</h2>
             <table class="table table-striped">
                 <thead>
@@ -70,7 +70,7 @@
                             </option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create Booking</button>
+                    <button type="submit" class="btn btn-primary mt-2">Create Booking</button>
                 </form>
             </div>
 
@@ -108,10 +108,10 @@
                             </option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create Booking</button>
+                    <button type="submit" class="btn btn-primary mt-2">Create Booking</button>
                 </form>
             </div>
-            <a class="btn btn-secondary" th:href="@{/reservation-list}">Back</a>
+            <a class="btn btn-secondary my-1" th:href="@{/reservation-list}">Back</a>
         </div>
     </div>
 
