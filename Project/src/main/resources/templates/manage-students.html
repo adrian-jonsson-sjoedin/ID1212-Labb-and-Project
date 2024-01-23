@@ -1,15 +1,12 @@
-<html
-        xmlns:th="http://thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layout}">
+<html xmlns:th="http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <title>Manage Students</title>
 </head>
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
     <section layout:fragment="body">
-        <div th:if="${param.success}" class="alert alert-success">
-            New user added!
+        <div th:if="${param.success}" class="alert alert-success" th:text="${param.success}">
+            <!-- Display success message from the 'success' parameter -->
         </div>
         <div class="mt-1">
             <h4>Students</h4>
@@ -45,12 +42,8 @@
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-secondary"
-               th:href="@{/register}">
-                Add new student</a>
-            <a class="btn btn-secondary"
-               th:href="@{/home}">
-                Back</a>
+            <a class="btn btn-secondary" th:href="@{/register}">Add new student</a>
+            <a class="btn btn-secondary" th:href="@{/home}">Back</a>
         </div>
     </section>
 </main>

@@ -62,7 +62,7 @@ public class HomeController {
             userService.delete(studentId);
             List<UserDTO> students = userService.retrieveAllStudents();
             model.addAttribute("students", students);
-            return "redirect:/manage-students";
+            return "redirect:/manage-students?success=Student deleted";
         } else {
             return "redirect:/home?unauthorized";
         }
@@ -112,6 +112,6 @@ public class HomeController {
         UserEntity user = userService.findById(studentId);
         user.setCourses(selectedCourses);
         userService.updateUser(user);
-        return "redirect:/manage-students?success";
+        return "redirect:/manage-students?success=New course access set !";
     }
 }

@@ -97,7 +97,7 @@ public class AuthenticationController {
         }
         int status = userService.saveUser(user);
         if (status == 0) {
-            return "redirect:/manage-students?success";
+            return "redirect:/manage-students?success=New user added !";
         } else {
             return "redirect:/register?unauthorized";
         }
