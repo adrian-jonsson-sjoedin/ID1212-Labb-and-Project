@@ -13,9 +13,15 @@
     <div class="main">
         <div class="col-md-12">
             <h2>Reservation List</h2>
+
+            <div th:if="${param.success}" class="alert alert-success">
+                <p th:text="${param.success}"></p>
+            </div>
+
             <div th:if="${NO_LISTS}">
                 No lists available for booking.
             </div>
+
             <table class="table table-striped" th:if="${!NO_LISTS}">
                 <thead>
                 <tr>

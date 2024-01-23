@@ -65,7 +65,7 @@ public class ReservationController {
             list.setUser(user);
             list.setCourse(course);
             reservationService.saveList(list);
-            return "redirect:/reservation-list?success";
+            return "redirect:/reservation-list?success=Reservation created successfully !";
         }
         return "redirect:/create-list?error";
     }
@@ -107,7 +107,7 @@ public class ReservationController {
         if (SecurityUtil.isUserAdmin()) {
             reservationService.deleteReservationList(listId);
             System.out.println("Booking removed");
-            return "redirect:/reservation-list";
+            return "redirect:/reservation-list?success=Reservation deleted successfully !";
         } else {
             return "redirect:/home?unauthorized";
         }
@@ -146,7 +146,7 @@ public class ReservationController {
     public String saveStudentReservation(@ModelAttribute("booking") Booking booking) {
         System.out.println(booking);
         reservationService.createReservation(booking);
-        return "redirect:/reservation-list?success";
+        return "redirect:/reservation-list?success=Booking created !";
     }
 
     @GetMapping("manage-students/{studentId}/manage-bookings")
