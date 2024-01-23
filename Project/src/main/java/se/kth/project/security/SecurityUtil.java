@@ -16,7 +16,7 @@ public class SecurityUtil {
     /**
      * Retrieves the role of the currently authenticated user from the security context.
      *
-     * @return The role, Admin or Student, of the authenticated user, or {@code null} if the user is not authenticated.
+     * @return The role ("admin" or "student") of the authenticated user, or {@code null} if the user is not authenticated.
      */
     private static String getSessionUserRole() {
 
@@ -31,7 +31,11 @@ public class SecurityUtil {
         }
         return null;
     }
-
+    /**
+     * Retrieves the username of the currently authenticated user from the security context.
+     *
+     * @return The username of the authenticated user, or {@code null} if the user is not authenticated.
+     */
     public static String getSessionUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -39,7 +43,11 @@ public class SecurityUtil {
         }
         return null;
     }
-
+    /**
+     * Checks if the currently authenticated user has the role of "admin."
+     *
+     * @return {@code true} if the user is authenticated and has the role of "admin," {@code false} otherwise.
+     */
     public static boolean isUserAdmin() {
         String userRole = getSessionUserRole();
         if (userRole != null) {

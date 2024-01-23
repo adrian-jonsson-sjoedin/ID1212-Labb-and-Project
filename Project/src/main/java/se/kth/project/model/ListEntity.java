@@ -7,7 +7,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
+/**
+ * Represents a list entity in the application.
+ * <p>
+ * This class is annotated as a JPA entity and maps to the "lists" table in the database.
+ * It defines the structure of the list table and its relationships with other entities,
+ * such as the course it belongs to, the user who created the list, and other attributes like description, location,
+ * start time, interval between presentations, and maximum slots available for reservations.
+ *
+ * @see jakarta.persistence.Entity
+ * @see jakarta.persistence.Table
+ * @see jakarta.persistence.Id
+ * @see jakarta.persistence.GeneratedValue
+ * @see jakarta.persistence.GenerationType
+ * @see jakarta.persistence.Column
+ * @see jakarta.persistence.ManyToOne
+ * @see jakarta.persistence.JoinColumn
+ * @see java.time.LocalDateTime
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +36,11 @@ public class ListEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne // FK till vilken kurs som listan ska höra till
+    @ManyToOne // FK to what course the list belongs to
     @JoinColumn(name = "course_id")
     private CourseEntity course;
 
-    @ManyToOne // Anger vilken av administratörerna som har skapat bokningslistan
+    @ManyToOne // Which admin created the list
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
@@ -33,7 +50,7 @@ public class ListEntity {
     @Column(nullable = false)
     private String location;
 
-    // tidsintervallet mellan varje redovisning i minuter
+    // the time between each slot in minutes
     private LocalDateTime start;
 
     @Column(nullable = false)
@@ -42,14 +59,4 @@ public class ListEntity {
     @Column(name="max_slots", nullable = false)
     private int maxSlots;
 
-    /*
-    Assistent Beda skapar en zoom-bokningslista för 8 labbar med 15 minuters
-    mellanrum på ID1212 med titeln "labbar" som börjar 23:e dec kl 10:15
-    INSERT INTO lists(course_id, user_id, description, location, start,
-    interval,max_slots) VALUES (1, 2, 'labbar', 'zoom', TIMESTAMP('2023-12-23
-    10:15:00.00'),15,8);
-    INSERT INTO lists(course_id, user_id, description, location, start,
-    interval,max_slots) VALUES (1, 2,'projekt', 'Ka-309', TIMESTAMP('2023-12-23
-    13:15:00.00'),30,4);
-     */
 }

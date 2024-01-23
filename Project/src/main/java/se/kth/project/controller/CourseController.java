@@ -13,21 +13,48 @@ import se.kth.project.dto.CourseDTO;
 import se.kth.project.model.CourseEntity;
 import se.kth.project.security.SecurityUtil;
 import se.kth.project.service.CourseService;
-import se.kth.project.service.UserService;
 
 import java.util.List;
 
+/**
+ * Controller handling course-related requests, such as creating and deleting courses.
+ * <p>
+ * This controller provides methods for displaying the course creation form, processing course creation,
+ * and handling course deletion actions. Access to certain functionalities is restricted to administrators.
+ *
+ * @see se.kth.project.service.CourseService
+ * @see se.kth.project.dto.CourseDTO
+ * @see se.kth.project.model.CourseEntity
+ * @see se.kth.project.security.SecurityUtil
+ * @see jakarta.validation.Valid
+ * @see org.springframework.ui.Model
+ * @see org.springframework.validation.BindingResult
+ * @see org.springframework.web.bind.annotation.GetMapping
+ * @see org.springframework.web.bind.annotation.ModelAttribute
+ * @see org.springframework.web.bind.annotation.PathVariable
+ * @see org.springframework.web.bind.annotation.PostMapping
+ * @since 1.0
+ */
 @Controller
 public class CourseController {
     private final CourseService courseService;
-    private final UserService userService;
 
+    /**
+     * Constructs a new instance of the {@code CourseController} class.
+     *
+     * @param courseService The service responsible for course-related operations.
+     */
     @Autowired
-    public CourseController(CourseService courseService, UserService userService) {
+    public CourseController(CourseService courseService) {
         this.courseService = courseService;
-        this.userService = userService;
     }
 
+    /**
+     * Displays the course creation form for administrators.
+     *
+     * @param model The Spring MVC model for rendering the view.
+     * @return The view name for the course creation form.
+     */
     @GetMapping("/create-course")
     public String createCourseForm(Model model) {
         if (SecurityUtil.isUserAdmin()) {
@@ -42,6 +69,14 @@ public class CourseController {
         }
     }
 
+    /**
+     * Processes the form submission to create a new course.
+     *
+     * @param course The course data submitted by the user.
+     * @param result The binding result for validation errors.
+     * @param model  The Spring MVC model for rendering the view.
+     * @return The redirect path based on the course creation status and validation results.
+     */
     @PostMapping("/create-course/save")
     public String createNewCourse(@Valid @ModelAttribute("course") CourseDTO course,
                                   BindingResult result,
@@ -61,6 +96,13 @@ public class CourseController {
         return "redirect:/create-course?savedSuccess";
     }
 
+    /**
+     * Deletes a course based on the provided course ID for administrators.
+     *
+     * @param courseId The ID of the course to be deleted.
+     * @param model    The Spring MVC model for rendering the view.
+     * @return The redirect path after deleting the course, or redirect to home without deleting if user role is not admin.
+     */
     @GetMapping("/create-course/{courseId}/delete")
     public String deleteCourse(@PathVariable("courseId") Integer courseId, Model model) {
         if (SecurityUtil.isUserAdmin()) {
@@ -81,5 +123,4 @@ public class CourseController {
         }
         return "redirect:/home?unauthorized";
     }
-
 }

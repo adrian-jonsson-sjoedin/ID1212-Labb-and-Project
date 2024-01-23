@@ -21,7 +21,7 @@ import se.kth.project.service.UserService;
  */
 @Controller
 public class AuthenticationController {
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Constructs a new instance of the {@code AuthenticationController} class.

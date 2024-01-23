@@ -16,9 +16,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Service implementation for handling operations related to courses.
- * <p>
- * This service provides methods for CRUD operations on courses.
+ * Service implementation class for managing courses.
+ * Provides methods for retrieving, saving, and deleting courses.
+ *
+ * @see CourseService
  */
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -29,6 +30,7 @@ public class CourseServiceImpl implements CourseService {
      * Constructs a new instance of the {@code CourseServiceImpl} class.
      *
      * @param courseRepository The repository for course-related database operations.
+     * @param listRepository   The repository for list-related database operations.
      */
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository, ListRepository listRepository) {
@@ -38,17 +40,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     /**
-     * Retrieves a list of all courses from the database.
-     *
-     * @return A list of all courses.
+     * {@inheritDoc}
      */
     @Override
     public List<CourseDTO> getAllCourses() {
         List<CourseEntity> courses = courseRepository.findAll();
         return courses.stream().map(this::convertToCourseDTO).collect(Collectors.toList());
-//        return courseRepository.findAll();
     }
 
+    /**
+     * Converts a {@link CourseEntity} to a {@link CourseDTO}.
+     *
+     * @param course The course entity to be converted.
+     * @return The corresponding course DTO.
+     */
     private CourseDTO convertToCourseDTO(CourseEntity course) {
         return new CourseDTO(
                 course.getId(),
@@ -56,9 +61,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     /**
-     * Saves a new course to the database based on the provided course DTO.
-     *
-     * @param courseDTO The DTO containing course information to be saved.
+     * {@inheritDoc}
      */
     @Override
     public void saveCourse(CourseDTO courseDTO) {
@@ -68,35 +71,40 @@ public class CourseServiceImpl implements CourseService {
     }
 
     /**
-     * Finds a course in the database based on its title.
-     *
-     * @param title The title of the course to be retrieved.
-     * @return The course with the specified title, or {@code null} if not found.
+     * {@inheritDoc}
      */
     @Override
     public CourseEntity findByTitle(String title) {
         return courseRepository.findByTitle(title);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CourseEntity findById(Integer id) {
         Optional<CourseEntity> courseEntityOptional = courseRepository.findById(id);
         return courseEntityOptional.orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CourseEntity> getCoursesFromIdList(List<Integer> courseIdList) {
         List<CourseEntity> selectedCourses = new ArrayList<>();
         for (Integer courseId : courseIdList) {
             // Use Optional to handle the possibility of a null result
             Optional<CourseEntity> courseOptional = courseRepository.findById(courseId);
-
             // Check if the course was found and present in the repository
             courseOptional.ifPresent(selectedCourses::add);
         }
         return selectedCourses;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public int delete(Integer courseId) {

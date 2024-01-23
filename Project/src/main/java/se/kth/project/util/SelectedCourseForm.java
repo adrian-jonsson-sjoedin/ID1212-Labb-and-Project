@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
+/**
+ * Used solely to store the selected courses on the course-access page
+ */
 @Setter
 @Getter
 @NoArgsConstructor

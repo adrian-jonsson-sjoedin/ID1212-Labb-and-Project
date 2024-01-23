@@ -19,6 +19,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link UserService} interface that provides
+ * functionality for managing user-related operations in the application.
+ * This service includes methods for saving users, retrieving user information,
+ * deleting users, and converting user entities to data transfer objects.
+ *
+ * @see UserService
+ */
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -29,8 +37,10 @@ public class UserServiceImpl implements UserService {
     /**
      * Constructs a new instance of the {@code UserServiceImpl} class.
      *
-     * @param userRepository  The repository for user-related database operations.
-     * @param passwordEncoder The password encoder for securing user passwords.
+     * @param userRepository        The repository for user-related database operations.
+     * @param listRepository        The repository for booking list-related database operations.
+     * @param reservationRepository The repository for reservation-related database operations.
+     * @param passwordEncoder       The password encoder for securing user passwords.
      */
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -44,15 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Saves a new user based on the provided registration information.
-     * <p>
-     * This method checks the role of the currently authenticated user using
-     * {@link SecurityUtil#isUserAdmin()}. If the user has the role of "admin",
-     * a new user is created and saved to the database with the provided registration details.
-     * The password is encoded using the configured password encoder.
-     *
-     * @param registrationDTO The data transfer object containing user registration information.
-     * @return 0 if the user is successfully saved by an admin; -1 otherwise.
+     * {@inheritDoc}
      */
     @Override
     public int saveUser(RegistrationDTO registrationDTO) {
@@ -67,34 +69,17 @@ public class UserServiceImpl implements UserService {
         return -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateUser(UserEntity user) {
         userRepository.save(user);
     }
 
-    /**
-     * Retrieves the user with matching username and password from the db.
-     *
-     * @param username
-     * @param password
-     * @return a UserDTO object for the user
-     */
-    @Override
-    public UserDTO retrieveUser(String username, String password) {
-        Optional<UserEntity> userOptional = userRepository.findByUsernameAndPassword(username, password);
-        if (userOptional.isPresent()) {
-            UserEntity user = userOptional.get();
-            return convertToDTO(user);
-        } else {
-            return null;
-        }
-    }
-
 
     /**
-     * Retrieves all users in the db that have admin set to false, i.e., all students in the db.
-     *
-     * @return a list containing UserDTO objects
+     * {@inheritDoc}
      */
     @Override
     public List<UserDTO> retrieveAllStudents() {
@@ -102,6 +87,9 @@ public class UserServiceImpl implements UserService {
         return users.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserDTO convertToDTO(UserEntity user) {
         return UserDTO.builder()
@@ -112,6 +100,9 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<UserDTO> retrieveAllStudentsForCourseByListId(Integer listId) {
         List<UserEntity> allStudents = userRepository.findAllByAdminIsFalse();
@@ -124,18 +115,16 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Retrieves a user entity from the database based on the given username.
-     * <p>
-     * This method queries the underlying {@code userRepository} to find a user entity by the specified username.
-     *
-     * @param username The username of the user to be retrieved.
-     * @return The user entity associated with the provided username, or {@code null} if no user is found.
+     * {@inheritDoc}
      */
     @Override
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public void delete(Integer studentId) {
@@ -144,6 +133,9 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(studentId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserEntity findById(Integer studentId) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(studentId);

@@ -8,6 +8,24 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a reservation entity in the application.
+ * <p>
+ * This class is annotated as a JPA entity and maps to the "reservations" table in the database.
+ * It defines the structure of the reservation table and the relationships with other entities,
+ * such as the list (reservation list), the user who made the reservation, and an optional cooperator (another user),
+ * and the time.
+ *
+ * @see jakarta.persistence.Entity
+ * @see jakarta.persistence.Table
+ * @see jakarta.persistence.Id
+ * @see jakarta.persistence.GeneratedValue
+ * @see jakarta.persistence.GenerationType
+ * @see jakarta.persistence.Column
+ * @see jakarta.persistence.ManyToOne
+ * @see jakarta.persistence.JoinColumn
+ * @see java.time.LocalDateTime
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,23 +37,19 @@ public class ReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne // vilken listan är det som bokningen/reservationen hör till.
+    @ManyToOne // which (reservation) list does this reservation/booking belong to
     @JoinColumn(name = "list_id")
     private ListEntity list;
 
-    @ManyToOne // vem är (studenten) som gjort bokningen
+    @ManyToOne // which student is the reservation for
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne // vem är (eventuell) medarbetare (också student)
+    @ManyToOne // an optional cooperator (another user)
     @JoinColumn(name = "coop_id", nullable = true)
     private UserEntity coopId; // second user id fk
 
-
-    // sequence börjar med 0 -> max_slots, första bokning
-    // är starttid, nästa är starttid + interval (från lists)
-    //dvs sequence säger vilken slot som är bokad
-    // gjorde om till att spara tiden för bokningen istället
+    //the time of the booked slot
     @Column(nullable = false)
     private LocalDateTime sequence;
 }
